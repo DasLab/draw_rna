@@ -3,35 +3,54 @@ import argparse
 import sys
 import os
 
-p = argparse.ArgumentParser()
-p.add_argument('inputfile')
-args = p.parse_args()
+color = {'A': 'y', 'U':'b', 'G':'r', 'C':'g', 'T': 'b', 'N': 'k', ' ': 'w'}
 
-color = {'A': 'y', 'U':'b', 'G':'r', 'C':'g', 'T': 'b', 'N': 'e', ' ': 'w'}
+
 def seq2col(seq):
     col = []
     for c in seq:
         col.append(color[c])
     return col
 
-with open(args.inputfile) as f:
-    for line in f:
-        if not line.startswith('#') and line.strip() != '':
-            try:
-                name = line.strip()
-                seq = next(f).strip()
-                secstruct = next(f).strip()
-            except Exception as e:
-                print e
-                raise ValueError('improper format')
 
-            try:
-                col = next(f).strip()
-            except:
-                col = False
+def main():
+    p = argparse.ArgumentParser()
+    p.add_argument('inputfile')
+    p.add_argument('--svgonly', action='store_true')
+    args = p.parse_args()
 
-            print 'drawing %s' % name
-            if col:
-                d.draw_rna(seq, secstruct, col, name)
-            else:
-                d.draw_rna(seq, secstruct, seq2col(seq), name)
+    with open(args.inputfile) as f:
+        for line in f:
+            if not line.startswith('#') and line.strip() != '':
+                try:
+                    name = line.strip()
+                    seq = next(f).strip()
+                    secstruct = next(f).strip()
+                except Exception as e:
+                    print e
+                    raise ValueError('improper format')
+    
+                try:
+                    col = next(f).strip()
+                except:
+                    col = False
+    
+                print 'drawing %s' % name
+                if col:
+                    d.draw_rna(seq, secstruct, col, name)
+                else:
+                    d.draw_rna(seq, secstruct, seq2col(seq), name)
+                
+                if not args.svgonly:
+                    if 'INKSCAPEDIR' not in os.environ:
+                        print('Please set INKSCAPEDIR environmental variable with path to Inkscape app.')
+                        return
+                    inkscape = '%s/Contents/Resources/bin/inkscape' % os.environ['INKSCAPEDIR']
+                    if not os.path.isfile(inkscape):
+                        print('Inkscape not found. Please update INKSCAPEDIR environmental variable with path to Inkscape app.')
+                        return
+                    os.system('%s --export-png $(pwd)/%s.png $(pwd)/%s.svg' % (inkscape, name, name))
+
+
+if __name__ == '__main__':
+    main()

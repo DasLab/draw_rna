@@ -2,6 +2,10 @@
 
 This script generates secondary structure diagrams for nucleic acids.
 
+## Dependencies
+
+The default behavior is to output the secondary structure visualization to both svg and png. The png requires Inkscape, whose directory must be set by environmental variable `INKSCAPEDIR`.
+
 ## Usage
 
 ### Input file
