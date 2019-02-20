@@ -3,6 +3,7 @@ import svg
 import inv_utils
 import argparse
 import re
+from matplotlib import cm
 
 NODE_R = 10
 PRIMARY_SPACE = 20
@@ -42,7 +43,18 @@ def draw_rna(sequence, secstruct, colors, filename="secstruct"):
     size = r.get_size()
 
     cell_size = max(size) + CELL_PADDING * 2
-    colors = [COLORS[x] for x in list(colors)]
+    # if colors are numeric, create color scale
+    try:
+        colors = [float(x) for x in colors.split()]
+        gist_earth = cm.get_cmap('gist_earth')
+        min_ = min(colors)
+        range_ = max(colors) - min_
+        colors = [gist_earth((x - min_)/range_)[:-1] for x in colors]
+        colors = [[c * 256 for c in color] for color in colors]
+    # otherwise, colors are indexes to COLORS dict
+    except:
+        colors = [COLORS[x] for x in list(colors)]
+
 
     svgobj = svg.svg("%s.svg" % filename, cell_size, cell_size)
     r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS)
