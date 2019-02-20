@@ -28,3 +28,7 @@ The draw script can be run with
 ```
 python draw_all.py example_input.txt
 ```
+
+### Sample secondary structure diagram
+
+![](example.png)
