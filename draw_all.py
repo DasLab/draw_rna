@@ -23,7 +23,7 @@ def main():
         for line in f:
             if not line.startswith('#') and line.strip() != '':
                 try:
-                    name = line.strip()
+                    name = line.strip().replace(' ', '_')
                     seq = next(f).strip()
                     secstruct = next(f).strip()
                 except Exception as e:
@@ -37,9 +37,9 @@ def main():
     
                 print 'drawing %s' % name
                 if col:
-                    d.draw_rna(seq, secstruct, col, name)
+                    d.draw_rna(seq, secstruct, col, name, line=args.line)
                 else:
-                    d.draw_rna(seq, secstruct, seq2col(seq), name)
+                    d.draw_rna(seq, secstruct, seq2col(seq), name, line=args.line)
                 
                 if not args.svgonly:
                     if 'INKSCAPEDIR' not in os.environ:
