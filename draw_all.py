@@ -5,6 +5,7 @@ import os
 
 p = argparse.ArgumentParser()
 p.add_argument('inputfile')
+p.add_argument('--line', action='store_true')
 args = p.parse_args()
 
 color = {'A': 'y', 'U':'b', 'G':'r', 'C':'g', 'T': 'b', 'N': 'e', ' ': 'w'}
@@ -32,6 +33,6 @@ with open(args.inputfile) as f:
 
             print 'drawing %s' % name
             if col:
-                d.draw_rna(seq, secstruct, col, name)
+                d.draw_rna(seq, secstruct, col, name, line=args.line)
             else:
-                d.draw_rna(seq, secstruct, seq2col(seq), name)
+                d.draw_rna(seq, secstruct, seq2col(seq), name, line=args.line)

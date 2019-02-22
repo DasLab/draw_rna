@@ -31,7 +31,7 @@ COLORS = {#"r": [255, 0, 0],
           #"i": [0, 204, 153],
           #"h": [46, 184, 46]}
 
-def draw_rna(sequence, secstruct, colors, filename="secstruct"):
+def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False):
     r = render_rna.RNARenderer()
 
     pairmap = render_rna.get_pairmap_from_secstruct(secstruct)
@@ -46,7 +46,7 @@ def draw_rna(sequence, secstruct, colors, filename="secstruct"):
     # if colors are numeric, create color scale
     try:
         colors = [float(x) for x in colors.split()]
-        gist_earth = cm.get_cmap('gist_earth')
+        gist_earth = cm.get_cmap('gist_earth_r')
         min_ = min(colors)
         range_ = max(colors) - min_
         colors = [gist_earth((x - min_)/range_)[:-1] for x in colors]
@@ -57,7 +57,7 @@ def draw_rna(sequence, secstruct, colors, filename="secstruct"):
 
 
     svgobj = svg.svg("%s.svg" % filename, cell_size, cell_size)
-    r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS)
+    r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
 
 def parse_colors(color_string):
     colorings = color_string.strip().split(",")
