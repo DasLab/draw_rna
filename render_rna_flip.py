@@ -254,39 +254,48 @@ class RNARenderer:
     def get_size(self):
         return self.size_
     
-    def draw(self,svgobj,offset_x,offset_y,colors, pairs, sequence, render_in_letter):
+    def draw(self,svgobj,offset_x,offset_y,colors, pairs, sequence, render_in_letter, line=False):
         if self.xarray_ != None:
             
-            if pairs:
-                for pair in pairs:
-                    svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']], offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']], pair['color'], self.NODE_R)
-            
-            if not render_in_letter:
-                for ii in range(0,len(self.xarray_)):
+            if line:
+                for ii in range(len(self.xarray_)-1):
                     if colors == None:
-                        svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
+                        svgobj.line(self.xarray_[ii], self.yarray_[ii], self.xarray_[ii+1], self.yarray_[ii+1],
+                                    'black')
                     else:
-                        svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
-                    
-            if sequence:
+                        svgobj.line(self.xarray_[ii], self.yarray_[ii], self.xarray_[ii+1], self.yarray_[ii+1],
+                                    colors[ii])
+            else:
+                if pairs:
+                    for pair in pairs:
+                        svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']], offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']], pair['color'], self.NODE_R)
                 
-                for ii in range(0,len(self.xarray_)):
-                    if not render_in_letter:
-                        text_size = self.NODE_R * 1.5
-                        if colors[ii] == [0,0,0]:
-                            color = "#FFFFFF"
-                        else:
-                            color = "#000000"
-                        text_offset_x = -4.0
-                        text_offset_y = (text_size)/2.0 - 1.0
-                    else:
+                if not render_in_letter:
+                    for ii in range(0,len(self.xarray_)):
                         if colors == None:
-                            color = "#000000"
+                            svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
                         else:
-                            color = colors[ii]
-                        text_size = self.NODE_R * 2.0
-                        text_offset_x = -2
-                        text_offset_y = (text_size)/2.0
+                            svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
+                        
+                if sequence:
+                    
+                    for ii in range(0,len(self.xarray_)):
+                        if not render_in_letter:
+                            text_size = self.NODE_R * 1.5
+                            if colors[ii] == [0,0,0]:
+                                color = "#FFFFFF"
+                            else:
+                                color = "#000000"
+                            text_offset_x = -4.0
+                            text_offset_y = (text_size)/2.0 - 1.0
+                        else:
+                            if colors == None:
+                                color = "#000000"
+                            else:
+                                color = colors[ii]
+                            text_size = self.NODE_R * 2.0
+                            text_offset_x = -2
+                            text_offset_y = (text_size)/2.0
                     svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
                 
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):

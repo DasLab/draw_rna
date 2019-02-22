@@ -5,7 +5,6 @@ import os
 
 color = {'A': 'y', 'U':'b', 'G':'r', 'C':'g', 'T': 'b', 'N': 'k', ' ': 'w'}
 
-
 def seq2col(seq):
     col = []
     for c in seq:
@@ -17,6 +16,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('inputfile')
     p.add_argument('--svgonly', action='store_true')
+    p.add_argument('--line', action='store_true')
     args = p.parse_args()
 
     with open(args.inputfile) as f:
