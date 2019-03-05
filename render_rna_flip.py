@@ -270,33 +270,23 @@ class RNARenderer:
                     for pair in pairs:
                         svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']], offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']], pair['color'], self.NODE_R)
                 
-                if not render_in_letter:
-                    for ii in range(0,len(self.xarray_)):
-                        if colors == None:
-                            svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
-                        else:
-                            svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
+                for ii in range(0,len(self.xarray_)):
+                    if colors == None:
+                        svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
+                    else:
+                        svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
                         
-                if sequence:
+                if sequence and render_in_letter:
                     
                     for ii in range(0,len(self.xarray_)):
-                        if not render_in_letter:
-                            text_size = self.NODE_R * 1.5
-                            if colors[ii] == [0,0,0]:
-                                color = "#FFFFFF"
-                            else:
-                                color = "#000000"
-                            text_offset_x = -4.0
-                            text_offset_y = (text_size)/2.0 - 1.0
+                        text_size = self.NODE_R * 1.5
+                        if colors[ii] == [0,0,0]:
+                            color = "#FFFFFF"
                         else:
-                            if colors == None:
-                                color = "#000000"
-                            else:
-                                color = colors[ii]
-                            text_size = self.NODE_R * 2.0
-                            text_offset_x = -2
-                            text_offset_y = (text_size)/2.0
-                    svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
+                            color = "#000000"
+                        text_offset_x = -4.0
+                        text_offset_y = (text_size)/2.0 - 1.0
+                        svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
                 
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
             

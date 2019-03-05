@@ -12,7 +12,7 @@ PAIR_SPACE = 23
 CELL_PADDING = 40
 TEXT_SIZE = 50
 
-RENDER_IN_LETTERS = False
+RENDER_IN_LETTERS = True
 
 COLORS = {#"r": [255, 0, 0],
           "r": [255, 102, 102],
@@ -54,7 +54,6 @@ def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False):
     # otherwise, colors are indexes to COLORS dict
     except:
         colors = [COLORS[x] for x in list(colors)]
-
 
     svgobj = svg.svg("%s.svg" % filename, cell_size, cell_size)
     r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
