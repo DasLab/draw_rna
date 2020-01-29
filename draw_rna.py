@@ -18,7 +18,7 @@ COLORS = {#"r": [255, 0, 0],
           "r": [255, 102, 102],
           "g": [113, 188, 120],
           "b": [51, 153, 255],
-          #"b": [0, 153, 255],
+          "p": [255, 210, 200],
           "k": [1, 0, 0],
           "y": [255, 211, 0],
           "c": [0, 255, 255],
@@ -27,8 +27,8 @@ COLORS = {#"r": [255, 0, 0],
           "e": [100, 100, 100],
           "o": [231, 115, 0],
           "i": [51, 204, 204],
-          "h": [51, 153, 255]}
-          #"i": [0, 204, 153],
+          "h": [51, 153, 255],
+          "u": [138, 43, 226]}
           #"h": [46, 184, 46]}
 
 def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False):
@@ -67,7 +67,7 @@ def parse_colors(color_string):
             colors += int(n) * [color]
         else:
             colors += [coloring]
-    return colors
+    return colors[0]
 
 def reorder_strands(order, seq, colors):
     breaks = [-1] + [m.start() for m in re.finditer("&", seq)] + [len(seq)]
@@ -104,6 +104,7 @@ def main():
                 colors = parse_colors(f.readline())
             seq.replace("&", "")
             secstruct.replace("&", "")
+            print(colors)
             draw_rna(seq, secstruct, colors, "%s_%d" % (args.filename, i))
 
 if __name__ == "__main__":

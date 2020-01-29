@@ -32,6 +32,7 @@ def main():
     
                 try:
                     col = next(f).strip()
+                    print 'got col'
                 except:
                     col = None
     
