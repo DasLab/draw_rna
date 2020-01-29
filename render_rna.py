@@ -31,7 +31,7 @@ def get_pairmap_from_secstruct(secstruct):
     pair_stack = []
     end_stack = []
     pairs_array = []
-    i_range = range(0,len(secstruct))
+    i_range = list(range(0,len(secstruct)))
 
     # initialize all values to -1, meaning no pair
     for ii in i_range:
@@ -54,7 +54,7 @@ def get_pairmap_from_secstruct(secstruct):
             pairs_array[pair_stack[ii]] = end_stack[-ii]
             pairs_array[end_stack[-ii]] = pair_stack[ii]
     else:
-         print "ERROR: pairing incorrect %s" % secstruct
+         print("ERROR: pairing incorrect %s" % secstruct)
 
     return pairs_array
         
@@ -62,7 +62,7 @@ def get_pairmap_from_secstruct(secstruct):
 def add_nodes_recursive(bi_pairs, rootnode, start_index, end_index):
     
     if(start_index > end_index) :
-        print ("Error occured while drawing RNA %d %d" % (start_index, end_index))
+        print(("Error occured while drawing RNA %d %d" % (start_index, end_index)))
         sys.exit(0)
     
     if(bi_pairs[start_index] == end_index) :
@@ -171,8 +171,6 @@ def get_coords_recursive(rootnode, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
     for ii in range(0, len(rootnode.children_)):
         get_coords_recursive(rootnode.children_[ii], xarray, yarray, PRIMARY_SPACE, PAIR_SPACE)
 
-
-
 class RNARenderer:
     
     def __init__(self):
@@ -254,7 +252,7 @@ class RNARenderer:
     def get_size(self):
         return self.size_
     
-    def draw(self,svgobj,offset_x,offset_y,colors, pairs, sequence, render_in_letter, line=False):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, line=False):
         if self.xarray_ != None:
             
             if line:
@@ -269,14 +267,16 @@ class RNARenderer:
             
                 if pairs:
                     for pair in pairs:
-                        svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']], offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']], pair['color'], self.NODE_R)
+                        svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']],
+                         offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']], pair['color'], 2) #self.NODE_R)
                 
                 if not render_in_letter:
                     for ii in range(0,len(self.xarray_)):
                         if colors == None:
                             svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
                         else:
-                            svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
+                            svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], "#646464")
+                                #svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
                         
                 if sequence:
                     

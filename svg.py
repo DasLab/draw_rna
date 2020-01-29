@@ -1,16 +1,19 @@
 """Methods for outputting SVG files."""
+def clamp(x): 
+  return int(max(0, min(x, 255)))
 
 def convert_color(color):
 	"""Converts a color object (be it touple-like, or string to an SVG-readable color string)."""
 	if type(color) == str:
 		return color
 	else:
-		return '#' + ''.join(('0' + hex(int(c))[2:])[-2:] for c in color)
+		r,g,b = color
+		return "#{0:02x}{1:02x}{2:02x}".format(clamp(r), clamp(g), clamp(b))
 
 class svg(object):
 	def __init__(self, filename, w, h):
 		# create the file
-		self.__out = file(filename, 'w')
+		self.__out = open(filename, 'w')
 		
 		# write the header
 		self.__out.write("""
@@ -29,12 +32,12 @@ class svg(object):
 		self.__out.close()
 		del self.__out
 	
-	def line(self, x1, y1, x2, y2, stroke, width=2):
+	def line(self, x1, y1, x2, y2, stroke, width=1):
 		""""""
 		# print 'Line (%s %s %s %s %s)' % (x1, y1, x2, y2, color)
 		stroke = convert_color(stroke)
 		self.__out.write('<line fill="none" stroke="%s" stroke-width="%dpx" x1="%s" y1="%s" x2="%s" y2="%s" x3="0.0" y3="0.0"/>\n' %
-			(stroke, width,x1, y1, x2, y2))
+			(stroke, width, x1, y1, x2, y2))
       
 	def polygon(self, points, fill, stroke, opacity = 1.0):
 		fill = convert_color(fill)
@@ -46,9 +49,9 @@ class svg(object):
 	def circle(self, x, y, radius, fill, stroke):
 		fill = convert_color(fill)
 		self.__out.write('<circle cx="%s" cy="%s" r="%s" fill="%s" stroke="%s"/>\n' %
-			(x, y, radius, fill,stroke))
+			(x, y, radius, fill, stroke))
 	
-	def text(self,x,y,size,fill,align,str):
+	def text(self, x, y, size, fill, align, str):
 		fill = convert_color(fill)
 		self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s">%s</text>' % (x,y,size,fill,align,str))
         ## rotated 

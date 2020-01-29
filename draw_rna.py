@@ -1,13 +1,16 @@
 import render_rna_flip as render_rna
 import svg
 import inv_utils
+import numpy as np
 import argparse
 import re
 from matplotlib import cm
+import matplotlib.pyplot as plt
+import matplotlib.colors as mcolors
 
 NODE_R = 10
 PRIMARY_SPACE = 20
-PAIR_SPACE = 23
+PAIR_SPACE = 20 #
 
 CELL_PADDING = 40
 TEXT_SIZE = 50
@@ -31,7 +34,7 @@ COLORS = {#"r": [255, 0, 0],
           "u": [138, 43, 226]}
           #"h": [46, 184, 46]}
 
-def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False):
+def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False, cmap_name='gist_heat_r', ext_color_file=False, chemical_mapping_mode=False):
     r = render_rna.RNARenderer()
 
     pairmap = render_rna.get_pairmap_from_secstruct(secstruct)
@@ -43,16 +46,32 @@ def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False):
     size = r.get_size()
 
     cell_size = max(size) + CELL_PADDING * 2
+
     # if colors are numeric, create color scale
-    try:
-        colors = [float(x) for x in colors.split()]
-        gist_earth = cm.get_cmap('gist_earth_r')
-        min_ = min(colors)
-        range_ = max(colors) - min_
-        colors = [gist_earth((x - min_)/range_)[:-1] for x in colors]
-        colors = [[c * 256 for c in color] for color in colors]
-    # otherwise, colors are indexes to COLORS dict
-    except:
+    if ext_color_file:
+
+        if chemical_mapping_mode:
+            vmax = 3
+        else:
+            vmax = np.max(colors)
+
+        colormap = plt.get_cmap(cmap_name) 
+        cNorm  = mcolors.Normalize(vmin=0, vmax=3)
+        scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
+        colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
+        colors = [[x*256 for x in y] for y in colors]
+
+    else:
+        # try:
+        #     print('Interpreting color string as integer values')
+        #     colors = [float(x) for x in colors.split()]
+        #     colormap = plt.get_cmap(cmap_name) 
+        #     cNorm  = mcolors.Normalize(vmin=0, vmax=3)
+        #     scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
+        #     colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
+        #     colors = [[x*256 for x in y] for y in colors]
+        # # otherwise, colors are indexes to COLORS dict
+        # except:
         colors = [COLORS[x] for x in list(colors)]
 
     svgobj = svg.svg("%s.svg" % filename, cell_size, cell_size)
