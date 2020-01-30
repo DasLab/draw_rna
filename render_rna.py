@@ -253,6 +253,7 @@ class RNARenderer:
         return self.size_
     
     def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, line=False):
+        print('svgobj',svgobj
         if self.xarray_ != None:
             
             if line:
