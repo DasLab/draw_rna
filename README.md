@@ -31,7 +31,7 @@ python draw_all.py example_input.txt
 
 ### Sample secondary structure diagram
 
-![](example.png)
+![](example_files/example_sequence_colors.png) ![](example_files/example_specific_colors.png) ![](example_files/example_contours.png)
 
 ## Notes on usage
 
