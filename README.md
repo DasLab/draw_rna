@@ -28,10 +28,10 @@ Multiple sequences can be specified in one file as in `example_input.txt`.
 The draw script can be run with
 
 ```
-python draw_all.py example_input.txt
+python draw_rna/draw_all.py example_files/example_input.txt
 ```
 
-### Sample secondary structure diagram
+### Sample secondary structure diagrams:
 
 ![](example_files/example_sequence_colors.png) ![](example_files/example_specific_colors.png) ![](example_files/example_contours.png)
 
@@ -54,7 +54,7 @@ And then remove nucleotides corresponding to blanks afterwards. (This would be a
 
 ## Extended options
 
-### Draw a large thing with linear exterior and with a custom color vector
+### Draw a large thing with linear exterior loop and with a custom color vector:
 
 `python draw_all.py covid19_5primeUTR.txt --large_mode --color_values perc_conserved_5UTR.txt --png`
 
@@ -64,7 +64,7 @@ If you use `--color_values` with an input file with multiple structures, the sam
 
 ### Draw from RDAT file containing reactivity
 
-Example command:
+Requires RDATkit to be in working python path. Example command:
 
 `python draw_from_rdat.py ETERNA_R69_0000.rdat 297 --png`
 
@@ -72,6 +72,6 @@ Example command:
 
 ### Movie mode
 
-More coming eventually. For now, if you generate a bunch of stills from a cotranscriptional simulation, can string them together with ImageMagick:
+More coming eventually. For now, if you generate a bunch of stills, say from a cotranscriptional simulation, can string them together with ImageMagick:
 
 `convert -delay 25 my_stills_*.png my_great_trajectory.gif`
