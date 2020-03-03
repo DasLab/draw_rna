@@ -1,0 +1,9 @@
+MS2_aptamer
+ACAUGAGGAUCACCCAUGU
+(((((.((....)))))))
+beeeeeeeeeeeeeeeeeb
+
+FMN_aptamer
+nAGGAUAU AGGAAGGn
+(......(.)......)
+eeeeeeeeeeeeeeeee

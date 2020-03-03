@@ -10,9 +10,9 @@ import matplotlib.colors as mcolors
 
 NODE_R = 10
 PRIMARY_SPACE = 20
-PAIR_SPACE = 20 #
+PAIR_SPACE = 20
 
-CELL_PADDING = 40
+CELL_PADDING = 100
 TEXT_SIZE = 50
 
 RENDER_IN_LETTERS = True
@@ -34,48 +34,69 @@ COLORS = {#"r": [255, 0, 0],
           "u": [138, 43, 226]}
           #"h": [46, 184, 46]}
 
-def draw_rna(sequence, secstruct, colors, filename="secstruct", line=False, cmap_name='gist_heat_r', ext_color_file=False, chemical_mapping_mode=False):
-    r = render_rna.RNARenderer()
+def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, cmap_name='viridis', 
+    ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False):
 
+    if large_mode or movie_mode:
+        external_multiplier = 10000
+    else:
+        external_multiplier = 1
+    
+    r = render_rna.RNARenderer()
     pairmap = render_rna.get_pairmap_from_secstruct(secstruct)
     pairs = []
     for i in range(len(pairmap)):
         if pairmap[i] > i:
             pairs.append({"from":i, "to":pairmap[i], "p":1.0, "color":COLORS["e"]})
-    r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE)
+    r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
     size = r.get_size()
 
-    cell_size = max(size) + CELL_PADDING * 2
+    if large_mode or movie_mode:
+        r.xarray_ = [x - r.xarray_[0] for x in r.xarray_]
+        r.yarray_ = [y - r.yarray_[0] for y in r.yarray_]
+        print(np.min(r.xarray_), np.max(r.xarray_))
+        print(np.min(r.yarray_), np.max(r.yarray_))
+
+        cell_size_x = np.max(r.xarray_) - np.min(r.xarray_) + CELL_PADDING * 2
+        cell_size_y = np.max(r.yarray_) - np.min(r.yarray_) + CELL_PADDING * 2
+        print(cell_size_x, cell_size_y)
+
+    else:
+        cell_size_x = max(size) + CELL_PADDING * 2
+        cell_size_y = max(size) + CELL_PADDING * 2
 
     # if colors are numeric, create color scale
     if ext_color_file:
-
         if chemical_mapping_mode:
             vmax = 3
+            cmap_name='gist_heat_r'
         else:
-            vmax = np.max(colors)
-
+            vmax = np.max(color_list)
         colormap = plt.get_cmap(cmap_name) 
-        cNorm  = mcolors.Normalize(vmin=0, vmax=3)
+        cNorm  = mcolors.Normalize(vmin=0, vmax=vmax) #3 for reac
         scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
-        colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
+        colors = [scalarMap.to_rgba(val)[:-1] for val in color_list]
         colors = [[x*256 for x in y] for y in colors]
 
     else:
-        # try:
-        #     print('Interpreting color string as integer values')
-        #     colors = [float(x) for x in colors.split()]
-        #     colormap = plt.get_cmap(cmap_name) 
-        #     cNorm  = mcolors.Normalize(vmin=0, vmax=3)
-        #     scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
-        #     colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
-        #     colors = [[x*256 for x in y] for y in colors]
-        # # otherwise, colors are indexes to COLORS dict
-        # except:
-        colors = [COLORS[x] for x in list(colors)]
+        if color_list[0].isalpha():
+            colors = [COLORS[x] for x in list(color_list)]
+        elif color_list[0].isdigit():
+            print('Interpreting color string as integer values')
+            colors = [float(x) for x in color_list]
+            colormap = plt.get_cmap(cmap_name) 
+            cNorm  = mcolors.Normalize(vmin=0, vmax=np.max(colors))
+            scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
+            colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
+            colors = [[x*256 for x in y] for y in colors]
 
-    svgobj = svg.svg("%s.svg" % filename, cell_size, cell_size)
-    r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
+    if movie_mode or large_mode:
+        svgobj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
+        r.draw(svgobj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
+    else:
+        svgobj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
+        r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
+
 
 def parse_colors(color_string):
     colorings = color_string.strip().split(",")

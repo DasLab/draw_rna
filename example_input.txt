@@ -1,8 +1,0 @@
-filename1
-CGTGANNNNNTCACG
-(((((.....)))))
-
-filename2
-GTGANNNNNTCAC
-((((.....))))
-rrrrbbbbbgggg

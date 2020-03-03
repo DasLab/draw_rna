@@ -1,0 +1,4 @@
+# CONTRAfold-predicted covid-19 5' UTR
+COVID_5UTR
+ATTAAAGGTTTATACCTTCCCAGGTAACAAACCAACCAACTTTCGATCTCTTGTAGATCTGTTCTCTAAACGAACTTTAAAATCTGTGTGGCTGTCACTCGGCTGCATGCTTAGTGCACTCACGCAGTATAATTAATAACTAATTACTGTCGTTGACAGGACACGAGTAACTCGTCTATCTTCTGCAGGCTGCTTACGGTTTCGTCCGTGTTGCAGCCGATCATCAGCACATCTAGGTTTCGTCCGGGTGTGACCGAAAGGTAAGATGGAGAGCCTTGTCCCTGGTTTCAACGAGAAAACACACGTCCAACTCAGTTTGCCTGTTTTACAGGTTCGCGACGTGCTCGTACGTGGCTTTGGAGACTCCGTGGAGGAGGTCTTATCAGAGGCACGTCAACATCTTAAAGATGGCACTTGTGGCTTAGTAGAAGTTGAAAAAGGCGTTTTGCC
+......(((((.(((((....)))))..)))))...........(((((.....))))).((((.......))))........((((((((.((.((((.(((.....))).)))))).))))))))(..(((((.....))))))...(((((((((((..(((((...(((.((((((((((((.((((((.(((((......)))))..))))))).....)))(((((((.((......)))))))))(((....)))))))))))))).))))).))))...))))))).......((((((.......((..((((((...))))))..))))))))(....(((((.(((((((((((((.....)))).))))..))))).)))))...(((((...)))))).......(((((.....)))))......(((.....)))

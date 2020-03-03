@@ -1,0 +1,13 @@
+example_sequence_colors
+CGTGANNNNNTCACG
+(((((.....)))))
+
+example_specific_colors
+GTGANNNNNTCAC
+((((.....))))
+rrrrbbbbbgggg
+
+example_contours
+GTGANNNNNTCAC
+((((.....))))
+0000111223333
