@@ -1,6 +1,11 @@
 # draw_rna
 
-This script generates secondary structure diagrams for nucleic acids.
+Quickly and flexibly generate secondary structures of nucleic acids.
+
+A communal and continuing effort by
+Eterna Players
+Michelle Wu
+Hannah Wayment-Steele
 
 ## Dependencies
 
@@ -47,8 +52,6 @@ rrrrbbwbbgggg
 And then remove nucleotides corresponding to blanks afterwards. (This is a quick fix.)
 
 ## Extended options
-
-Last updated: H Wayment-Steele, 2020.
 
 ### Draw a large thing with linear exterior and with a custom color vector
 
