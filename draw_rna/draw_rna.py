@@ -12,7 +12,6 @@ NODE_R = 10
 PRIMARY_SPACE = 20
 PAIR_SPACE = 20
 
-CELL_PADDING = 100
 TEXT_SIZE = 50
 
 RENDER_IN_LETTERS = True
@@ -38,8 +37,11 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
     ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False):
 
     if large_mode or movie_mode:
+        CELL_PADDING = 100
+
         external_multiplier = 10000
     else:
+        CELL_PADDING = 40
         external_multiplier = 1
     
     r = render_rna.RNARenderer()
