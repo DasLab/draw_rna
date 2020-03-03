@@ -2,10 +2,7 @@
 
 Quickly and flexibly generate secondary structures of nucleic acids.
 
-A communal and continuing effort by
-Eterna Players
-Michelle Wu
-Hannah Wayment-Steele
+A communal and continuing effort by Eterna Players, M. Wu, H. Wayment-Steele.
 
 ## Dependencies
 
@@ -49,7 +46,11 @@ GTGANN NNTCAC
 ((((.....))))
 rrrrbbwbbgggg
 ```
-And then remove nucleotides corresponding to blanks afterwards. (This is a quick fix.)
+And then remove nucleotides corresponding to blanks afterwards. (This would be a quick fix.)
+
+## NOTE ON render_rna and render_rna_flip:
+
+'render_rna_flip.py' is what is currently called in the main routine and where major edits have been made. `render_rna.py` renders 3' -> 5'. TODO: handle 3' -> 5' drawing better.
 
 ## Extended options
 
