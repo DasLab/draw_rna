@@ -1,5 +1,5 @@
 from RDATKit import rdatkit
-import draw_rna as d
+import draw_rna.draw_rna.draw as d
 import sys,os
 import argparse
 import numpy as np

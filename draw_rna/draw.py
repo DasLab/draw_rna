@@ -1,12 +1,14 @@
-import render_rna_flip as render_rna
-import svg
-import inv_utils
+import draw_rna.draw_rna.svg as svg
+import draw_rna.draw_rna.mpl as mpl
+import draw_rna.draw_rna.render_rna_flip as render_rna
+import draw_rna.draw_rna.inv_utils as inv_utils
 import numpy as np
 import argparse
 import re
 from matplotlib import cm
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
+
 
 NODE_R = 10
 PRIMARY_SPACE = 20
@@ -34,13 +36,14 @@ COLORS = {#"r": [255, 0, 0],
           #"h": [46, 184, 46]}
 
 def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, cmap_name='viridis', 
-    ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False):
+    ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False, svg_mode=False):
 
     if large_mode or movie_mode:
         CELL_PADDING = 100
 
         external_multiplier = 10000
     else:
+
         CELL_PADDING = 40
         external_multiplier = 1
     
@@ -50,18 +53,20 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
     for i in range(len(pairmap)):
         if pairmap[i] > i:
             pairs.append({"from":i, "to":pairmap[i], "p":1.0, "color":COLORS["e"]})
+
     r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+
     size = r.get_size()
 
     if large_mode or movie_mode:
         r.xarray_ = [x - r.xarray_[0] for x in r.xarray_]
         r.yarray_ = [y - r.yarray_[0] for y in r.yarray_]
-        print(np.min(r.xarray_), np.max(r.xarray_))
-        print(np.min(r.yarray_), np.max(r.yarray_))
+        #print(np.min(r.xarray_), np.max(r.xarray_))
+        #print(np.min(r.yarray_), np.max(r.yarray_))
 
         cell_size_x = np.max(r.xarray_) - np.min(r.xarray_) + CELL_PADDING * 2
         cell_size_y = np.max(r.yarray_) - np.min(r.yarray_) + CELL_PADDING * 2
-        print(cell_size_x, cell_size_y)
+        #print(cell_size_x, cell_size_y)
 
     else:
         cell_size_x = max(size) + CELL_PADDING * 2
@@ -81,9 +86,10 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
         colors = [[x*256 for x in y] for y in colors]
 
     else:
-        if color_list[0].isalpha():
+        if isinstance(color_list[0],str) and color_list[0].isalpha():
             colors = [COLORS[x] for x in list(color_list)]
-        elif color_list[0].isdigit():
+
+        else: #if isinstance(color_list[0],float):
             print('Interpreting color string as integer values')
             colors = [float(x) for x in color_list]
             colormap = plt.get_cmap(cmap_name) 
@@ -92,13 +98,20 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
             colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
             colors = [[x*256 for x in y] for y in colors]
 
-    if movie_mode or large_mode:
-        svgobj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
-        r.draw(svgobj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
+    if svg_mode:
+        # drawing object writes an svg file
+        drawing_obj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
     else:
-        svgobj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
-        r.draw(svgobj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line)
+        drawing_obj = mpl.mpl(figsize=(cell_size_x/72, cell_size_y/72))
 
+    if movie_mode or large_mode:
+        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line, svg_mode)
+    else:
+        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line, svg_mode)
+
+    if not svg_mode:
+        # apply matplotlib settings
+        drawing_obj.clean_up()
 
 def parse_colors(color_string):
     colorings = color_string.strip().split(",")

@@ -10,6 +10,14 @@ The default behavior is to output the secondary structure visualization to both 
 
 ## Basic Usage
 
+### Jupyter notebook
+
+See `example_files/demo.ipynb` for more. In brief:
+
+```
+
+```
+
 ### Input file
 
 An input file is used to specify the sequence, secondary structure, and coloring of the desired drawing. The format is as follows
@@ -33,7 +41,7 @@ python draw_rna/draw_all.py example_files/example_input.txt
 
 ### Sample secondary structure diagrams:
 
-![](example_files/example_sequence_colors.png) ![](example_files/example_specific_colors.png) ![](example_files/example_contours.png)
+![](example_files/command_line/example_sequence_colors.png) ![](example_files/command_line/example_specific_colors.png) ![](example_files/command_line/example_contours.png)
 
 ## Notes on usage
 

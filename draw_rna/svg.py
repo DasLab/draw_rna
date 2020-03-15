@@ -1,14 +1,6 @@
 """Methods for outputting SVG files."""
-def clamp(x): 
-  return int(max(0, min(x, 255)))
 
-def convert_color(color):
-	"""Converts a color object (be it touple-like, or string to an SVG-readable color string)."""
-	if type(color) == str:
-		return color
-	else:
-		r,g,b = color
-		return "#{0:02x}{1:02x}{2:02x}".format(clamp(r), clamp(g), clamp(b))
+from draw_rna.draw_rna.draw_utils import * 
 
 class svg(object):
 	def __init__(self, filename, w, h):

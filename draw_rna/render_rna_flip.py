@@ -1,10 +1,6 @@
-import sys
-import svg
-import re
-import random
-import math
+import draw_rna.draw_rna.svg as svg
+import re, random, math
 
-    
 class RNATreeNode:
     
     def __init__(self):
@@ -16,7 +12,6 @@ class RNATreeNode:
         self.y_ = 0
         self.go_x_ = 0
         self.go_y_ = 0
-
 
 def get_pairmap_from_secstruct(secstruct):
     """
@@ -278,7 +273,7 @@ class RNARenderer:
     def get_size(self):
         return self.size_
     
-    def draw(self,svgobj,offset_x,offset_y,colors, pairs, sequence, render_in_letter, line=False):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, line=False, svg_mode=True):
         if self.xarray_ != None:
             
             if line:
@@ -296,9 +291,9 @@ class RNARenderer:
                 
                 for ii in range(0,len(self.xarray_)):
                     if colors == None:
-                        svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
+                        svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
                     else:
-                        svgobj.circle(self.xarray_[ii] + offset_x,self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
+                        svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
                         
                 if sequence and render_in_letter:
                     
@@ -308,10 +303,14 @@ class RNARenderer:
                             color = "#FFFFFF"
                         else:
                             color = "#000000"
-                        text_offset_x = -4.0
-                        text_offset_y = (text_size)/2.0 - 1.0
-                        svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
-                
+
+                        if svg_mode:
+                            text_offset_x = -4.0
+                            text_offset_y = (text_size)/2.0 - 1.0
+                            svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
+                        else:
+                            svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii])
+
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
             
         if(self.root_ != None) :
