@@ -297,6 +297,10 @@ class RNARenderer:
                         
                 if sequence and render_in_letter:
                     
+                    # write 5' 3' markers
+                    svgobj.text(self.xarray_[0] + offset_x - 2*self.NODE_R, self.yarray_[0] + offset_y + 2*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'")
+                    svgobj.text(self.xarray_[-1] + offset_x + 2*self.NODE_R, self.yarray_[-1] + offset_y + 2*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'")
+
                     for ii in range(0,len(self.xarray_)):
                         text_size = self.NODE_R * 1.5
                         if colors[ii] == [0,0,0]:
