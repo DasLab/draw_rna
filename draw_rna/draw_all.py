@@ -4,21 +4,10 @@ from draw_rna.draw_rna.draw_utils import seq2col
 import argparse, sys, os
 import numpy as np
 
-def main():
-    p = argparse.ArgumentParser()
-    p.add_argument('inputfile')
-    p.add_argument('--png', action='store_true')
-    p.add_argument('--movie_mode', action='store_true')
-    p.add_argument('--large_mode',action='store_true')
-    p.add_argument('--line', action='store_true')
-    p.add_argument('--color_values', nargs='*', action='store',
-     dest='color_value_file', help='File containing values (i.e. reactivities)')
-    p.add_argument('--colormap', action='store',default= 'viridis')
-    args = p.parse_args()
-
+def draw_all_main(png, movie_mode, large_mode, line, color_value_file, colormap):
     ext_color_file=False
 
-    with open(args.inputfile) as f:
+    with open(inputfile) as f:
         for line in f:
             if not line.startswith('#') and line.strip() != '':
                 try:
@@ -37,22 +26,22 @@ def main():
         
                 print('drawing %s' % name)
 
-                if args.color_value_file is not None:
-                    print('Reading in colors from %s' % args.color_value_file[0])
-                    color_vec = np.loadtxt(args.color_value_file[0])
+                if color_value_file is not None:
+                    print('Reading in colors from %s' % color_value_file[0])
+                    color_vec = np.loadtxt(color_value_file[0])
                     ext_color_file=True
                     assert(len(color_vec) == len(seq))
 
                 if ext_color_file:
                     d.draw_rna(seq, secstruct, color_vec, name, line=args.line, ext_color_file=True, 
-                        cmap_name=args.colormap, large_mode=args.large_mode,
-                        movie_mode=args.movie_mode, svg_mode=True)
+                        cmap_name=colormap, large_mode=large_mode,
+                        movie_mode=movie_mode, svg_mode=True)
                 elif color_string:
-                    d.draw_rna(seq, secstruct, color_string, name, line=args.line, cmap_name = args.colormap,
-                     large_mode = args.large_mode, movie_mode=args.movie_mode, svg_mode=True)
+                    d.draw_rna(seq, secstruct, color_string, name, line=line, cmap_name = colormap,
+                     large_mode = large_mode, movie_mode=movie_mode, svg_mode=True)
                 else:
-                    d.draw_rna(seq, secstruct, seq2col(seq), name, line=args.line, cmap_name = args.colormap,
-                     large_mode = args.large_mode, movie_mode=args.movie_mode, svg_mode=True)
+                    d.draw_rna(seq, secstruct, seq2col(seq), name, line=line, cmap_name = colormap,
+                     large_mode = large_mode, movie_mode=movie_mode, svg_mode=True)
                 
                 if args.png:
                     if 'INKSCAPEDIR' not in os.environ:
@@ -66,4 +55,23 @@ def main():
                     os.system('rm $(pwd)/%s.svg' % (name))
 
 if __name__ == '__main__':
-    main()
+    p = argparse.ArgumentParser()
+    p.add_argument('inputfile')
+    p.add_argument('--png', action='store_true')
+    p.add_argument('--movie_mode', action='store_true')
+    p.add_argument('--large_mode',action='store_true')
+    p.add_argument('--line', action='store_true')
+    p.add_argument('--color_values', nargs='*', action='store',
+     dest='color_value_file', help='File containing values (i.e. reactivities)')
+    p.add_argument('--colormap', action='store',default= 'viridis')
+    args = p.parse_args()
+
+    draw_all_main(
+        inputfile = args.inputfile,
+        png = args.png,
+        movie_mode = args.movie_mode,
+        large_mode = args.large_mode,
+        line = args.line,
+        color_value_file = args.color_value_file,
+        colormap = args.colormap
+    )
