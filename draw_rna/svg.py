@@ -1,6 +1,6 @@
 """Methods for outputting SVG files."""
 
-from draw_rna.draw_rna.draw_utils import * 
+from draw_rna.draw_utils import * 
 
 class svg(object):
 	def __init__(self, filename, w, h):

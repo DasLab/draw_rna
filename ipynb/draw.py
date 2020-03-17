@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
-import draw_rna.draw_rna.draw as d
-from draw_rna.draw_rna.draw_utils import seq2col
+import draw_rna.draw as d
+from draw_rna.draw_utils import seq2col
 
 def draw_struct(seq, secstruct, c=None, line=False, large_mode=False, cmap='viridis'):
 

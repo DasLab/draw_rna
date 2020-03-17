@@ -1,0 +1,4 @@
+dist/
+build/
+*.pyc
+draw_rna.egg-info/
