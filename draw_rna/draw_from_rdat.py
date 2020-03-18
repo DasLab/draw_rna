@@ -6,7 +6,6 @@ import numpy as np
 
 def draw_rdat_construct(rdat_file, construct_id):
 
-
     rdat_identifier=os.path.basename(rdat_file).replace('.rdat','')
     
     rdat = rdatkit.RDATFile()
