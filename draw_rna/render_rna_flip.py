@@ -85,7 +85,7 @@ def add_nodes_recursive(bi_pairs, rootnode, start_index, end_index):
 
     rootnode.children_.append(newnode)
 
-def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier):
+def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped):
 
     cross_x = -go_y
     cross_y = go_x
@@ -103,16 +103,16 @@ def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, N
 
         if(rootnode.children_[0].is_pair_):
             if unflipped:
-                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y + go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y + go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
             else:
-                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y - go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y - go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
         elif(rootnode.children_[0].is_pair_ == False and rootnode.children_[0].index_a_ < 0):
-            setup_coords_recursive(rootnode.children_[0], rootnode, start_x, start_y, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+            setup_coords_recursive(rootnode.children_[0], rootnode, start_x, start_y, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
         else:
             if unflipped:
-                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y + go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y + go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
             else:
-                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y - go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+                setup_coords_recursive(rootnode.children_[0], rootnode, start_x + go_x * PRIMARY_SPACE, start_y - go_y * PRIMARY_SPACE, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
 
     elif(len(rootnode.children_) > 1) :
 
@@ -160,9 +160,9 @@ def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, N
             child_go_len = math.sqrt(child_go_x * child_go_x + child_go_y * child_go_y)
 
             if unflipped:
-                setup_coords_recursive(rootnode.children_[ii], rootnode, child_x, child_y, child_go_x / child_go_len, child_go_y / child_go_len, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+                setup_coords_recursive(rootnode.children_[ii], rootnode, child_x, child_y, child_go_x / child_go_len, child_go_y / child_go_len, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
             else:
-                setup_coords_recursive(rootnode.children_[ii], rootnode, child_x, child_y, child_go_x / child_go_len, -child_go_y / child_go_len, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+                setup_coords_recursive(rootnode.children_[ii], rootnode, child_x, child_y, child_go_x / child_go_len, -child_go_y / child_go_len, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
 
             if(rootnode.children_[ii].is_pair_) :
                 length_walker += PAIR_SPACE / 2.0
@@ -171,7 +171,7 @@ def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, N
         rootnode.x_ = start_x
         rootnode.y_ = start_y
 
-def get_coords_recursive(rootnode, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
+def get_coords_recursive(rootnode, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE, unflipped):
     if(rootnode.is_pair_) :
         cross_x = -rootnode.go_y_
         cross_y = rootnode.go_x_
@@ -190,17 +190,18 @@ def get_coords_recursive(rootnode, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
         yarray[rootnode.index_a_] = rootnode.y_
 
     for ii in range(0, len(rootnode.children_)):
-        get_coords_recursive(rootnode.children_[ii], xarray, yarray, PRIMARY_SPACE, PAIR_SPACE)
+        get_coords_recursive(rootnode.children_[ii], xarray, yarray, PRIMARY_SPACE, PAIR_SPACE, unflipped)
 
 
 
 class RNARenderer:
 
-    def __init__(self):
+    def __init__(self, unflipped = False):
         self.root_ = None
         self.xarray_ = None
         self.yarray_ = None
         self.size_ = None
+        self.unflipped_ = unflipped
 
     def setup_tree(self, secstruct, NODE_R,PRIMARY_SPACE, PAIR_SPACE, external_multiplier):
 
@@ -244,8 +245,8 @@ class RNARenderer:
             xarray.append(0.0)
             yarray.append(0.0)
 
-        self.setup_coords(NODE_R,PRIMARY_SPACE,PAIR_SPACE, external_multiplier)
-        self.get_coords(xarray,yarray,PRIMARY_SPACE,PAIR_SPACE)
+        self.setup_coords(NODE_R,PRIMARY_SPACE,PAIR_SPACE, external_multiplier, unflipped_)
+        self.get_coords(xarray,yarray,PRIMARY_SPACE,PAIR_SPACE, unflipped_)
 
         min_x = xarray[0] - NODE_R
         min_y = yarray[0] - NODE_R
@@ -318,18 +319,18 @@ class RNARenderer:
                         else:
                             svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii])
 
-    def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
+    def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE, unflipped=False):
 
         if(self.root_ != None) :
-            get_coords_recursive(self.root_, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE)
+            get_coords_recursive(self.root_, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE, unflipped)
         else :
             for ii in range(0,len(xarray)):
                 xarray[ii] = 0
                 yarray[ii] = ii * PRIMARY_SPACE
 
-    def setup_coords(self, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier):
+    def setup_coords(self, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped=False):
         if self.root_ != None:
-            setup_coords_recursive(self.root_, None, 0, 0, 0, 1, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+            setup_coords_recursive(self.root_, None, 0, 0, 0, 1, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, unflipped)
 
 
 
