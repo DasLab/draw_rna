@@ -1,5 +1,5 @@
-import draw_rna.draw_rna.draw as d
-from draw_rna.draw_rna.draw_utils import seq2col
+import draw_rna.draw as d
+from draw_rna.draw_utils import seq2col
 
 import argparse, sys, os
 import numpy as np

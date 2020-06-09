@@ -1,3 +1,7 @@
+dist/
+build/
+*.pyc
+draw_rna.egg-info/
 draw_rna/__pycache__/*
 .ipynb_checkpoints/*
 __pycache__/*

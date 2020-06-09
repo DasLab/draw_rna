@@ -1,4 +1,4 @@
-import draw_rna.draw_rna.svg as svg
+import draw_rna.svg as svg
 import re, random, math
 
 class RNATreeNode:

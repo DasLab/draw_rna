@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from draw_rna.draw_rna.draw_utils import * 
+from draw_rna.draw_utils import * 
 
 class mpl(object):
 	def __init__(self, figsize, dpi=72):
