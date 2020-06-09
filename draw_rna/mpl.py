@@ -21,7 +21,7 @@ class mpl(object):
 	
 	def text(self, x, y, size, fill, align, string):
 		fill = convert_color(fill)
-		plt.text(x,y,string, fontsize=size, c=fill,zorder=2, horizontalalignment='center', verticalalignment='center')
+		plt.text(x,y,string, fontsize=size, color=fill,zorder=2, horizontalalignment='center', verticalalignment='center')
         ## rotated 
 		#self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 	
