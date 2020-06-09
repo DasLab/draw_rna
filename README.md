@@ -1,6 +1,6 @@
 # draw_rna
 
-Quickly and flexibly generate secondary structures of nucleic acids.
+Generate quick secondary structures of nucleic acids via jupyter notebook or command line.
 
 A communal and continuing effort by the Das Lab, Eterna Players, M. Wu, H. Wayment-Steele.
 
