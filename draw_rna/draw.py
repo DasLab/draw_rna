@@ -1,6 +1,6 @@
 import draw_rna.draw_rna.svg as svg
 import draw_rna.draw_rna.mpl as mpl
-import draw_rna.draw_rna.render_rna_flip as render_rna
+import draw_rna.draw_rna.render_rna as render_rna
 import draw_rna.draw_rna.inv_utils as inv_utils
 import numpy as np
 import argparse
