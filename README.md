@@ -2,7 +2,7 @@
 
 Quickly and flexibly generate secondary structures of nucleic acids.
 
-A communal and continuing effort by Eterna Players, M. Wu, H. Wayment-Steele.
+A communal and continuing effort by the Das Lab, Eterna Players, M. Wu, H. Wayment-Steele.
 
 ## Dependencies
 
