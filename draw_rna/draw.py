@@ -1,6 +1,6 @@
 import draw_rna.svg as svg
 import draw_rna.mpl as mpl
-import draw_rna.render_rna_flip as render_rna
+import draw_rna.render_rna as render_rna
 import draw_rna.inv_utils as inv_utils
 import numpy as np
 import argparse
@@ -35,17 +35,19 @@ COLORS = {#"r": [255, 0, 0],
           "u": [138, 43, 226]}
           #"h": [46, 184, 46]}
 
-def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, cmap_name='viridis', 
+def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, cmap_name='viridis', rotation=0,
     ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False, svg_mode=False):
 
     if large_mode or movie_mode:
         CELL_PADDING = 100
 
         external_multiplier = 10000
+        external_offset = np.pi + np.pi*rotation/180
     else:
 
         CELL_PADDING = 40
         external_multiplier = 1
+        external_offset = 0 + np.pi*rotation/180
     
     r = render_rna.RNARenderer()
     pairmap = render_rna.get_pairmap_from_secstruct(secstruct)
@@ -54,7 +56,7 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
         if pairmap[i] > i:
             pairs.append({"from":i, "to":pairmap[i], "p":1.0, "color":COLORS["e"]})
 
-    r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier)
+    r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, external_offset)
 
     size = r.get_size()
 
@@ -105,9 +107,9 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
         drawing_obj = mpl.mpl(figsize=(cell_size_x/72, cell_size_y/72))
 
     if movie_mode or large_mode:
-        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line, svg_mode)
+        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode)
     else:
-        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, line, svg_mode)
+        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, )
 
     if not svg_mode:
         # apply matplotlib settings
