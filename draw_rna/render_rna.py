@@ -1,5 +1,6 @@
 import draw_rna.svg as svg
 import re, random, math
+import numpy as np
 
 class RNATreeNode:
 
@@ -274,7 +275,8 @@ class RNARenderer:
     def get_size(self):
         return self.size_
 
-    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, line=False, svg_mode=True):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, 
+        line=False, svg_mode=True, numbering=None):
         if self.xarray_ != None:
 
             if line:
@@ -296,6 +298,13 @@ class RNARenderer:
                     else:
                         svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
 
+                text_offset_x = 0
+                text_offset_y = 0
+                if svg_mode:
+                    text_offset_x = -4.0
+                    text_offset_y = (text_size)/2.0 - 1.0
+
+                # Add sequence letters and 5'/3' markers
                 if sequence and render_in_letter:
 
                     # write 5' 3' markers
@@ -312,12 +321,49 @@ class RNARenderer:
                         else:
                             color = "#000000"
 
-                        if svg_mode:
-                            text_offset_x = -4.0
-                            text_offset_y = (text_size)/2.0 - 1.0
-                            svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
-                        else:
-                            svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii])
+                        svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
+
+                # Add sequence numbering
+                if sequence and (numbering is not None):
+                    if len(numbering) != len(sequence):
+                        raise RuntimeError("Need to have the same number of nucleotide numbers as sequence letters.")
+
+                    for ii in range(len(numbering)):
+                        if numbering[ii] % 20 == 0:
+                            [x, y] = self.get_distant_xy_pos(ii, offset_x + text_offset_x, offset_y + text_offset_y)
+                            svgobj.text(x, y, text_size, "#000000", "center", str(numbering[ii]))
+
+    def get_distant_xy_pos(self, idx, offset_x, offset_y):
+        neighbor_idx = idx - 1
+        if idx == 0:
+            neighbor_idx = idx + 1
+        perp_vec = (-self.yarray_[idx] + self.yarray_[neighbor_idx], self.xarray_[idx] - self.xarray_[neighbor_idx])
+        perp_angle = math.atan2(perp_vec[0], perp_vec[1])
+
+        # trial_angles = [perp_angle, -perp_angle]
+        trial_angles = [0, np.pi/2, np.pi, 3 * np.pi/2]
+        max_min_dist = -1
+        max_min_angle = 0
+
+        for angle in trial_angles:
+            x_pos = self.xarray_[idx] - math.sin(angle)*3.5*self.NODE_R
+            y_pos = self.yarray_[idx] - math.cos(angle)*3.5*self.NODE_R
+
+            min_dist = - 1
+            for ii in range(len(self.xarray_)):
+                if abs(ii - idx) < 2:
+                    continue
+                dist = math.sqrt((x_pos - self.xarray_[ii])**2 + (y_pos - self.yarray_[ii])**2)
+                if min_dist == -1 or dist < min_dist:
+                    min_dist = dist
+
+            if max_min_dist == -1 or min_dist > max_min_dist:
+                max_min_dist = min_dist
+                max_min_angle = angle
+
+        x_pos = self.xarray_[idx] + offset_x - math.sin(max_min_angle)*3.5*self.NODE_R
+        y_pos = self.yarray_[idx] + offset_y - math.cos(max_min_angle)*3.5*self.NODE_R
+        return [x_pos, y_pos]
 
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
 
