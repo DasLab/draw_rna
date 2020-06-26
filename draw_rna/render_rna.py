@@ -1,5 +1,6 @@
 import draw_rna.svg as svg
 import re, random, math
+import numpy as np
 
 class RNATreeNode:
 
@@ -53,6 +54,71 @@ def get_pairmap_from_secstruct(secstruct):
 
     return pairs_array
 
+def get_stem_anchors(secstruct):
+    max_bulge_cnt = 0
+
+    bpp_arr = np.array([-1]*len(secstruct))
+
+    open_char = "("
+    close_char = ")"
+
+    open_pos = []
+
+    for jj in range(len(secstruct)):
+        if secstruct[jj] == open_char:
+            open_pos += [jj]
+        if secstruct[jj] == close_char:
+            pair = open_pos[-1]
+            del open_pos[-1]
+            bpp_arr[jj] = pair
+            bpp_arr[pair] = jj
+
+    stem_anchors = {}
+
+    cur_start = -1
+    cur_end = -1
+    cur_end_pair = -1
+    stem_started = False
+    stem_complete = False
+    bulge_cnt = 0
+    
+    cur_bps = []
+
+    ii = 0
+    while ii < len(secstruct):
+        if stem_started:
+            if (bpp_arr[ii] > -1 and ii < bpp_arr[ii]) and \
+                (bpp_arr[ii] >= cur_end_pair - 1 - max_bulge_cnt):
+                cur_end = ii
+                cur_end_pair = bpp_arr[ii]
+                cur_bps += [(cur_end, cur_end_pair)]
+                bulge_cnt = 0
+            if not (bpp_arr[ii] > -1 and ii < bpp_arr[ii]):
+                bulge_cnt += 1
+                if bulge_cnt > max_bulge_cnt:
+                    stem_complete = True
+            elif bpp_arr[ii] < cur_end_pair - 1 - max_bulge_cnt:
+                stem_complete = True
+                ii -= 1
+        if not stem_started and (bpp_arr[ii] > -1 and ii < bpp_arr[ii]):
+            cur_start = ii
+            cur_end = ii
+            cur_end_pair = bpp_arr[ii]
+            cur_bps += [(cur_end, cur_end_pair)]
+            stem_started = True
+        if stem_complete and cur_end > cur_start:
+            # Only count stems if at least 2 base pairs
+            stem_key = int((cur_start + cur_end)/2)
+            while (bpp_arr[stem_key] == -1):
+                stem_key += 1
+            stem_anchors[(stem_key, bpp_arr[stem_key])] = cur_bps
+            cur_bps = []
+            stem_started = False
+            stem_complete = False
+        ii += 1
+
+    return stem_anchors
+
 
 def add_nodes_recursive(bi_pairs, rootnode, start_index, end_index):
 
@@ -84,6 +150,7 @@ def add_nodes_recursive(bi_pairs, rootnode, start_index, end_index):
                 jj += 1
 
     rootnode.children_.append(newnode)
+
 
 def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, external_offset):
 
@@ -173,6 +240,7 @@ def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, N
     else :
         rootnode.x_ = start_x
         rootnode.y_ = start_y
+
 
 def get_coords_recursive(rootnode, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
     if(rootnode.is_pair_) :
@@ -270,11 +338,16 @@ class RNARenderer:
         self.size_ = [max_x - min_x, max_y - min_y]
         self.xarray_ = xarray
         self.yarray_ = yarray
+        self.avoidx_ = xarray
+        self.avoidy_ = yarray
+        self.stem_anchors_ = get_stem_anchors(secstruct)
+        print(self.stem_anchors_)
 
     def get_size(self):
         return self.size_
 
-    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, line=False, svg_mode=True):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, 
+        line=False, svg_mode=True, numbering=None, bpp_matrix=None):
         if self.xarray_ != None:
 
             if line:
@@ -296,6 +369,13 @@ class RNARenderer:
                     else:
                         svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
 
+                text_offset_x = 0
+                text_offset_y = 0
+                if svg_mode:
+                    text_offset_x = -4.0
+                    text_offset_y = (text_size)/2.0 - 1.0
+
+                # Add sequence letters and 5'/3' markers
                 if sequence and render_in_letter:
 
                     # write 5' 3' markers
@@ -312,12 +392,64 @@ class RNARenderer:
                         else:
                             color = "#000000"
 
-                        if svg_mode:
-                            text_offset_x = -4.0
-                            text_offset_y = (text_size)/2.0 - 1.0
-                            svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
-                        else:
-                            svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii])
+                        svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
+
+                # Add sequence numbering
+                if sequence and (numbering is not None):
+                    if len(numbering) != len(sequence):
+                        raise RuntimeError("Need to have the same number of nucleotide numbers as sequence letters.")
+
+                    for ii in range(len(numbering)):
+                        if numbering[ii] % 20 == 0:
+                            [x, y] = self.get_distant_xy_pos(ii, offset_x + text_offset_x, offset_y + text_offset_y, 3)
+                            self.avoidx_ += [x - offset_x - text_offset_x]
+                            self.avoidy_ += [y - offset_y - text_offset_y]
+                            svgobj.text(x, y, text_size, "#000000", "center", str(numbering[ii]))
+                
+                if bpp_matrix is not None:
+                    for stem_key, stem_val in self.stem_anchors_.items():
+                        total_bpp = 0
+                        for (pair1, pair2) in stem_val:
+                            total_bpp += bpp_matrix[pair1, pair2]
+                        total_bpp = total_bpp/len(stem_val)
+                        bpp_str = "{:.0%}".format(total_bpp)
+                        [anchor1, anchor2] = stem_key
+                        [x, y] = self.get_distant_xy_pos(anchor1, offset_x + text_offset_x, offset_y + text_offset_y, len(bpp_str))
+                        self.avoidx_ += [x - offset_x - text_offset_x]
+                        self.avoidy_ += [y - offset_y - text_offset_y]
+                        svgobj.text(x, y, text_size, "#009900", "center", bpp_str)
+
+    def get_distant_xy_pos(self, idx, offset_x, offset_y, strlen):
+        neighbor_idx = idx - 1
+        if idx == 0:
+            neighbor_idx = idx + 1
+        perp_vec = (-self.yarray_[idx] + self.yarray_[neighbor_idx], self.xarray_[idx] - self.xarray_[neighbor_idx])
+        perp_angle = math.atan2(perp_vec[0], perp_vec[1])
+
+        # trial_angles = [perp_angle, -perp_angle]
+        trial_angles = [0, np.pi/2, np.pi, 3 * np.pi/2]
+        max_min_dist = -1
+        max_min_angle = 0
+
+        for angle in trial_angles:
+            x_pos = self.xarray_[idx] - math.sin(angle)*strlen*self.NODE_R
+            y_pos = self.yarray_[idx] - math.cos(angle)*strlen*self.NODE_R
+
+            min_dist = - 1
+            for ii in range(len(self.xarray_)):
+                if abs(ii - idx) < 2:
+                    continue
+                dist = math.sqrt((x_pos - self.xarray_[ii])**2 + (y_pos - self.yarray_[ii])**2)
+                if min_dist == -1 or dist < min_dist:
+                    min_dist = dist
+
+            if max_min_dist == -1 or min_dist > max_min_dist:
+                max_min_dist = min_dist
+                max_min_angle = angle
+
+        x_pos = self.xarray_[idx] + offset_x - math.sin(max_min_angle)*strlen*self.NODE_R
+        y_pos = self.yarray_[idx] + offset_y - math.cos(max_min_angle)*strlen*self.NODE_R
+        return [x_pos, y_pos]
 
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
 
