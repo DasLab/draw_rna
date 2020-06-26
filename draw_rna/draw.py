@@ -36,7 +36,7 @@ COLORS = {#"r": [255, 0, 0],
           #"h": [46, 184, 46]}
 
 def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, cmap_name='viridis', rotation=0,
-    ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False, svg_mode=False, numbering=None):
+    ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False, svg_mode=False, numbering=None, bpp_matrix=None):
 
     if large_mode or movie_mode:
         CELL_PADDING = 100
@@ -107,9 +107,11 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
         drawing_obj = mpl.mpl(figsize=(cell_size_x/72, cell_size_y/72))
 
     if movie_mode or large_mode:
-        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, numbering)
+        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, 
+            RENDER_IN_LETTERS, external_offset, line, svg_mode, numbering, bpp_matrix)
     else:
-        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, numbering)
+        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, 
+            RENDER_IN_LETTERS, external_offset, line, svg_mode, numbering, bpp_matrix)
 
     if not svg_mode:
         # apply matplotlib settings
