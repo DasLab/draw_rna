@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+  <svg version="1.1" id="Layer_1"
+  x="0px" y="0px"
+  width="224.563384066px" height="224.563384066px"
+  viewBox="0 0 224.563384066 224.563384066"
+  enable-background="new 0 0 247.44 234.492"
+  xml:space="preserve">
+<line fill="none" stroke="#646464" stroke-width="10px" x1="61.7230434935" y1="50.0" x2="81.7230434935" y2="50.0" x3="0.0" y3="0.0"/>
+<line fill="none" stroke="#646464" stroke-width="10px" x1="61.7230434935" y1="70.0" x2="81.7230434935" y2="70.0" x3="0.0" y3="0.0"/>
+<line fill="none" stroke="#646464" stroke-width="10px" x1="61.7230434935" y1="90.0" x2="81.7230434935" y2="90.0" x3="0.0" y3="0.0"/>
+<line fill="none" stroke="#646464" stroke-width="10px" x1="61.7230434935" y1="110.0" x2="81.7230434935" y2="110.0" x3="0.0" y3="0.0"/>
+<line fill="none" stroke="#646464" stroke-width="10px" x1="61.7230434935" y1="130.0" x2="81.7230434935" y2="130.0" x3="0.0" y3="0.0"/>
+<circle cx="61.7230434935" cy="50.0" r="10" fill="#71bc78" stroke="[113, 188, 120]"/>
+<circle cx="61.7230434935" cy="70.0" r="10" fill="#ff6666" stroke="[255, 102, 102]"/>
+<circle cx="61.7230434935" cy="90.0" r="10" fill="#3399ff" stroke="[51, 153, 255]"/>
+<circle cx="61.7230434935" cy="110.0" r="10" fill="#ff6666" stroke="[255, 102, 102]"/>
+<circle cx="61.7230434935" cy="130.0" r="10" fill="#ffd300" stroke="[255, 211, 0]"/>
+<circle cx="50.0" cy="147.323549112" r="10" fill="#010000" stroke="[1, 0, 0]"/>
+<circle cx="54.3025151795" cy="166.174099784" r="10" fill="#010000" stroke="[1, 0, 0]"/>
+<circle cx="71.7230434935" cy="174.563384066" r="10" fill="#010000" stroke="[1, 0, 0]"/>
+<circle cx="89.1435718074" cy="166.174099784" r="10" fill="#010000" stroke="[1, 0, 0]"/>
+<circle cx="93.446086987" cy="147.323549112" r="10" fill="#010000" stroke="[1, 0, 0]"/>
+<circle cx="81.7230434935" cy="130.0" r="10" fill="#3399ff" stroke="[51, 153, 255]"/>
+<circle cx="81.7230434935" cy="110.0" r="10" fill="#71bc78" stroke="[113, 188, 120]"/>
+<circle cx="81.7230434935" cy="90.0" r="10" fill="#ffd300" stroke="[255, 211, 0]"/>
+<circle cx="81.7230434935" cy="70.0" r="10" fill="#71bc78" stroke="[113, 188, 120]"/>
+<circle cx="81.7230434935" cy="50.0" r="10" fill="#ff6666" stroke="[255, 102, 102]"/>
+ <text x="61" y="25" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">5'</text> <text x="81" y="25" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">3'</text> <text x="57" y="56" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">C</text> <text x="57" y="76" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">G</text> <text x="57" y="96" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">T</text> <text x="57" y="116" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">G</text> <text x="57" y="136" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">A</text> <text x="46" y="153" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">N</text> <text x="50" y="172" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">N</text> <text x="67" y="181" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">N</text> <text x="85" y="172" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">N</text> <text x="89" y="153" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">N</text> <text x="77" y="136" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">T</text> <text x="77" y="116" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">C</text> <text x="77" y="96" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">A</text> <text x="77" y="76" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">C</text> <text x="77" y="56" font-family="sans_serif" font-size="15" fill="#000000" text-anchor="center">G</text></svg>

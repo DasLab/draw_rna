@@ -8,6 +8,18 @@ A communal and continuing effort by the Das Lab, Eterna Players, M. Wu, H. Wayme
 
 The default behavior is to output the secondary structure visualization to both svg and png. The png requires Inkscape, whose directory must be set by environmental variable `INKSCAPEDIR`.
 
+## Install
+
+Clone this repository to your hard drive and install as follows:
+
+```
+git clone git@github.com:DasLab/draw_rna.git
+cd draw_rna/
+python setup.py install
+```
+
+*Warning* if you see errors in using the repository, it maybe due to your `draw_rna` directory sitting in a folder like `src/` which already is in your Python Path. in that case, *rename* `draw_rna` to `draw_rna_directory` and/or move it to another spot in your system.
+
 ## Basic Usage
 
 ### Jupyter notebook
@@ -36,9 +48,11 @@ Multiple sequences can be specified in one file as in `example_input.txt`.
 The draw script can be run with
 
 ```
-python draw_rna/draw_all.py example_files/example_input.txt
+python draw_rna/draw_all.py example_files/command_line/example_input.txt
 ```
 
+You'll get files `example_contours.svg`, `example_sequence_colors.svg`, `example_specific_colors.svg`. Example output available in [example_files/command_line/](example_files/command_line/).
+  
 ### Sample secondary structure diagrams:
 
 ![](example_files/command_line/example_sequence_colors.png) ![](example_files/command_line/example_specific_colors.png) ![](example_files/command_line/example_contours.png)
