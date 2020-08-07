@@ -1,5 +1,6 @@
 import draw_rna.svg as svg
 import re, random, math
+import numpy as np
 
 class RNATreeNode:
 
@@ -274,7 +275,10 @@ class RNARenderer:
     def get_size(self):
         return self.size_
 
-    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, line=False, svg_mode=True):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, line=False, svg_mode=True, alpha=None):
+        if alpha is None:
+            alpha = np.ones(len(self.xarray_))
+
         if self.xarray_ != None:
 
             if line:
@@ -288,22 +292,24 @@ class RNARenderer:
             else:
                 if pairs:
                     for pair in pairs:
-                        svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']], offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']], pair['color'], self.NODE_R)
+                        svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']],
+                         offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']],
+                          pair['color'], self.NODE_R, alpha=min([alpha[pair['from']],alpha[pair['to']]]))
 
                 for ii in range(0,len(self.xarray_)):
                     if colors == None:
-                        svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000")
+                        svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, "#000000", "#000000", alpha[ii])
                     else:
-                        svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii])
+                        svgobj.circle(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, self.NODE_R, colors[ii], colors[ii], alpha[ii])
 
                 if sequence and render_in_letter:
 
                     # write 5' 3' markers
                     svgobj.text(self.xarray_[0] + offset_x - math.sin(external_offset)*2.5*self.NODE_R,
-                     self.yarray_[0] + offset_y - math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'")
+                     self.yarray_[0] + offset_y - math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'", 1)
 
                     svgobj.text(self.xarray_[-1] + offset_x - math.sin(external_offset)*2.5*self.NODE_R,
-                     self.yarray_[-1] + offset_y - math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'")
+                     self.yarray_[-1] + offset_y - math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'", 1)
 
                     for ii in range(0,len(self.xarray_)):
                         text_size = self.NODE_R * 1.5
@@ -317,7 +323,7 @@ class RNARenderer:
                             text_offset_y = (text_size)/2.0 - 1.0
                             svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
                         else:
-                            svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii])
+                            svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii], alpha[ii])
 
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE):
 

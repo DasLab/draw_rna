@@ -29,14 +29,17 @@ COLORS = {#"r": [255, 0, 0],
           "m": [255, 0, 255],
           "w": [255, 255, 255],
           "e": [100, 100, 100],
+          "f": [200, 200, 200],
           "o": [231, 115, 0],
           "i": [51, 204, 204],
           "h": [51, 153, 255],
           "u": [138, 43, 226]}
           #"h": [46, 184, 46]}
 
-def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, cmap_name='viridis', rotation=0,
-    ext_color_file=False, chemical_mapping_mode=False, large_mode=False, movie_mode=False, svg_mode=False):
+def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
+    cmap_name='viridis', rotation=0, alpha=None,
+    ext_color_file=False, chemical_mapping_mode=False, 
+    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None):
 
     if large_mode or movie_mode:
         CELL_PADDING = 100
@@ -75,14 +78,16 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
         cell_size_y = max(size) + CELL_PADDING * 2
 
     # if colors are numeric, create color scale
+
+
     if ext_color_file:
-        if chemical_mapping_mode:
-            vmax = 3
-            cmap_name='gist_heat_r'
-        else:
-            vmax = np.max(color_list)
+        if vmin is None:
+            vmin=np.min(color_list)
+        if vmax is None:
+            vmax=np.max(color_list)
+
         colormap = plt.get_cmap(cmap_name) 
-        cNorm  = mcolors.Normalize(vmin=0, vmax=vmax) #3 for reac
+        cNorm  = mcolors.Normalize(vmin=vmin, vmax=vmax)
         scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
         colors = [scalarMap.to_rgba(val)[:-1] for val in color_list]
         colors = [[x*256 for x in y] for y in colors]
@@ -95,7 +100,12 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
             print('Interpreting color string as integer values')
             colors = [float(x) for x in color_list]
             colormap = plt.get_cmap(cmap_name) 
-            cNorm  = mcolors.Normalize(vmin=0, vmax=np.max(colors))
+            if vmin is None:
+                vmin=np.min(colors)
+            if vmax is None:
+                vmax=np.max(colors)
+
+            cNorm  = mcolors.Normalize(vmin=vmin, vmax=vmax)
             scalarMap = cm.ScalarMappable(norm=cNorm, cmap=colormap)
             colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
             colors = [[x*256 for x in y] for y in colors]
@@ -107,9 +117,11 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False, 
         drawing_obj = mpl.mpl(figsize=(cell_size_x/72, cell_size_y/72))
 
     if movie_mode or large_mode:
-        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode)
+        r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING,
+         colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, alpha)
     else:
-        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, )
+        r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors,
+         pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, alpha )
 
     if not svg_mode:
         # apply matplotlib settings
