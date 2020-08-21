@@ -27,4 +27,7 @@ def draw_struct(seq, secstruct, c=None, line=False, large_mode=False,
         d.draw_rna(seq, secstruct, seq2col(seq), line=line, cmap_name = cmap, vmin=vmin, vmax=vmax,
          large_mode = large_mode, rotation=rotation, alpha=alpha, ax=ax)
 
+    if ax is None:
+        plt.show()
+
     #return plt.gca()

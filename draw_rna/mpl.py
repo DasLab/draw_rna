@@ -18,7 +18,7 @@ class mpl(object):
 
 	def circle(self, x, y, radius, fill, stroke, alpha=1):
 		fill = convert_color(fill)
-		plt.scatter(x,y,s=1,zorder=0)
+		plt.scatter(x,y,s=1,zorder=0,alpha=alpha)
 		circ = plt.Circle((x,y),radius=radius, alpha=alpha, color=fill, zorder=1, linewidth=0)
 		self.ax.add_artist(circ)
 	

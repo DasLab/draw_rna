@@ -115,7 +115,6 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
         drawing_obj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
     else:
         if ax is None:
-            print(cell_size_x, cell_size_y)
             fig, ax = plt.subplots(1,1,figsize=(cell_size_x/72, cell_size_y/72))
             drawing_obj = mpl.mpl(ax=ax)
 
