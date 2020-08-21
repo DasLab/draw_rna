@@ -39,7 +39,7 @@ COLORS = {#"r": [255, 0, 0],
 def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
     cmap_name='viridis', rotation=0, alpha=None,
     ext_color_file=False, chemical_mapping_mode=False, 
-    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None):
+    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None):
 
     if large_mode or movie_mode:
         CELL_PADDING = 100
@@ -114,7 +114,13 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
         # drawing object writes an svg file
         drawing_obj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
     else:
-        drawing_obj = mpl.mpl(figsize=(cell_size_x/72, cell_size_y/72))
+        if ax is None:
+            print(cell_size_x, cell_size_y)
+            fig, ax = plt.subplots(1,1,figsize=(cell_size_x/72, cell_size_y/72))
+            drawing_obj = mpl.mpl(ax=ax)
+
+        else:
+            drawing_obj = mpl.mpl(ax=ax)
 
     if movie_mode or large_mode:
         r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING,
