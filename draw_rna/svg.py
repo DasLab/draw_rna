@@ -43,9 +43,9 @@ class svg(object):
 		self.__out.write('<circle cx="%s" cy="%s" r="%s" fill="%s" stroke="%s" alpha="%s"/>\n' %
 			(x, y, radius, fill, stroke,alpha))
 
-	def text(self, x, y, size, fill, align, str,alpha=1):
+	def text(self, x, y, size, fill, align, string,alpha=1):
 		fill = convert_color(fill)
-		self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" alpha="%s">%s</text>' % (x,y,size,fill,align,str,alpha))
+		self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" alpha="%s">%s</text>' % (x,y,size,fill,align,alpha,string))
         ## rotated
 		#self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 
