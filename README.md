@@ -9,16 +9,15 @@ A communal and continuing effort by the Das Lab, Eterna Players, M. Wu, H. Wayme
 The default behavior is to output the secondary structure visualization to both svg and png. The png requires Inkscape, whose directory must be set by environmental variable `INKSCAPEDIR`.
 
 ## Install
+`draw_rna` is [available on PyPI](https://pypi.org/project/draw-rna/).
 
-Clone this repository to your hard drive and install as follows:
+`pip install draw_rna`
 
-```
-git clone git@github.com:DasLab/draw_rna.git
-cd draw_rna/
-python setup.py install
-```
+Alternatively, clone the Github repository to your hard drive as follows:
 
-*Warning* if you see errors in using the repository, it maybe due to your `draw_rna` directory sitting in a folder like `src/` which already is in your Python Path. in that case, *rename* `draw_rna` to `draw_rna_directory` and/or move it to another spot in your system.
+`git clone git@github.com:DasLab/draw_rna.git`
+
+*Warning* if you see errors in using the repository, it may be due to your `draw_rna` directory sitting in a folder like `src/` which already is in your Python Path. in that case, *rename* `draw_rna` to `draw_rna_directory` and/or move it to another spot in your system.
 
 ## Basic Usage
 
