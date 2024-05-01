@@ -1,0 +1,28 @@
+[project]
+name = "draw_rna"
+version = "0.1.1"
+authors = [
+  { name="Das Lab", email="thedaslab@stanford.edu" },
+]
+description = "Draw RNA secondary structures in Python"
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+  "argparse>=1.4",
+  "numpy>=1.15",
+  "matplotlib>=3.2",
+  "rdat-kit>=1.6"
+]
+
+[project.urls]
+"Homepage" = "https://github.com/DasLab/draw_rna"
+"Bug Tracker" = "https://github.com/DasLab/draw_rna/issues"
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
