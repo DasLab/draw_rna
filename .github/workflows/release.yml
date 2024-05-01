@@ -20,7 +20,7 @@ jobs:
       run: python3 -m pip install build --user
 
     - name: Build a binary wheel and a source tarball
-      run: cd draw_rna && python3 -m build
+      run: python3 -m build
 
     - name: Store the distribution packages
       uses: actions/upload-artifact@v3
@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/rdat-kit  # Replace <package-name> with your PyPI project name
+      url: https://pypi.org/p/draw_rna
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
 
@@ -58,7 +58,7 @@ jobs:
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/rdat-kit
+      url: https://test.pypi.org/p/draw_rna
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing
