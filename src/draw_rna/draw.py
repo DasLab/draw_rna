@@ -39,16 +39,20 @@ COLORS = {#"r": [255, 0, 0],
 def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
     cmap_name='viridis', rotation=0, alpha=None,
     ext_color_file=False, chemical_mapping_mode=False, 
-    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None, flipped=False):
+    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None, flipped=False, padding=None):
+
+    CELL_PADDING = padding
 
     if large_mode or movie_mode:
-        CELL_PADDING = 100
+        if CELL_PADDING is None:
+            CELL_PADDING = 100
 
         external_multiplier = 10000
         external_offset = np.pi + np.pi*rotation/180
     else:
+        if CELL_PADDING is None:
+            CELL_PADDING = 40
 
-        CELL_PADDING = 40
         external_multiplier = 1
         external_offset = 0 + np.pi*rotation/180
     
