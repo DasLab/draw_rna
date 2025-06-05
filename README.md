@@ -47,7 +47,7 @@ Multiple sequences can be specified in one file as in `example_input.txt`.
 The draw script can be run with
 
 ```
-python draw_rna/draw_all.py example_files/command_line/example_input.txt
+python src/draw_rna/draw_all.py example_files/command_line/example_input.txt
 ```
 
 You'll get files `example_contours.svg`, `example_sequence_colors.svg`, `example_specific_colors.svg`. Example output available in [example_files/command_line/](example_files/command_line/).
@@ -83,7 +83,7 @@ If you use `--color_values` with an input file with multiple structures, the sam
 
 Requires RDATkit to be in working python path. Example command:
 
-`python draw_from_rdat.py ETERNA_R69_0000.rdat 297 --png`
+`python src/draw_rna/draw_from_rdat.py ETERNA_R69_0000.rdat 297 --png`
 
 ![](example_files/ETERNA_R69_0000_297.png)
 
