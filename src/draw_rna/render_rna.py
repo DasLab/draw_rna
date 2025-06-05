@@ -59,7 +59,7 @@ def add_nodes_recursive(bi_pairs, rootnode, start_index, end_index):
 
     if(start_index > end_index) :
         print("Error occured while drawing RNA %d %d" % (start_index, end_index))
-        sys.exit(0)
+        raise RuntimeError("Error occured while drawing RNA %d %d" % (start_index, end_index))
 
     if(bi_pairs[start_index] == end_index) :
 
