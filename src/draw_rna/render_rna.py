@@ -132,7 +132,6 @@ def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, N
         for ii in range(0,len(rootnode.children_)):
 
             if (parentnode == None):
-
                 length_walker += PRIMARY_SPACE
 
                 if(rootnode.children_[ii].is_pair_) :
@@ -158,7 +157,7 @@ def setup_coords_recursive(rootnode, parentnode, start_x, start_y, go_x, go_y, N
                 if(rootnode.children_[ii].is_pair_) :
                     length_walker += PAIR_SPACE / 2.0
 
-                rad_angle = length_walker/circle_length * 2 * math.pi - math.pi / 2.0
+                rad_angle = length_walker/circle_length * 2 * math.pi - math.pi / 2.0 + external_offset
                 child_x = rootnode.x_ + math.cos(rad_angle) * cross_x * circle_radius + math.sin(rad_angle) * go_x * circle_radius
                 child_y = rootnode.y_ + (-1 if flipped else 1) * math.cos(rad_angle) * cross_y * circle_radius + (-1 if flipped else 1) * math.sin(rad_angle) * go_y * circle_radius
 
@@ -305,7 +304,7 @@ class RNARenderer:
                 if sequence and render_in_letter:
 
                     # write 5' 3' markers
-                    svgobj.text(self.xarray_[0] + offset_x - math.sin(external_offset)*2.5*self.NODE_R,
+                    svgobj.text(self.xarray_[0] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
                      self.yarray_[0] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'", 1)
 
                     svgobj.text(self.xarray_[-1] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
