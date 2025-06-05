@@ -274,7 +274,7 @@ class RNARenderer:
     def get_size(self):
         return self.size_
 
-    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, flipped, line=False, svg_mode=True, alpha=None):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, flipped, line=False, svg_mode=True, alpha=None, direction_labels=True):
         if alpha is None:
             alpha = np.ones(len(self.xarray_))
 
@@ -304,11 +304,12 @@ class RNARenderer:
                 if sequence and render_in_letter:
 
                     # write 5' 3' markers
-                    svgobj.text(self.xarray_[0] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
-                     self.yarray_[0] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'", 1)
+                    if direction_labels:
+                        svgobj.text(self.xarray_[0] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
+                        self.yarray_[0] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'", 1)
 
-                    svgobj.text(self.xarray_[-1] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
-                     self.yarray_[-1] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'", 1)
+                        svgobj.text(self.xarray_[-1] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
+                        self.yarray_[-1] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'", 1)
 
                     for ii in range(0,len(self.xarray_)):
                         text_size = self.NODE_R * 1.5
