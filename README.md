@@ -26,7 +26,8 @@ Alternatively, clone the Github repository to your hard drive as follows:
 See `example_files/demo.ipynb` for more. In brief:
 
 ```
-
+from draw_rna.ipynb_draw import draw_struct
+draw_struct('GGGGAAAACCCC', '((((....))))')
 ```
 
 ### Input file
