@@ -14,6 +14,7 @@ def main():
     p.add_argument('--color_values', nargs='*', action='store',
      dest='color_value_file', help='File containing values (i.e. reactivities)')
     p.add_argument('--colormap', action='store',default= 'viridis')
+    p.add_argument('--flipped', action='store_true')
     args = p.parse_args()
 
     ext_color_file=False
@@ -46,13 +47,13 @@ def main():
                 if ext_color_file:
                     d.draw_rna(seq, secstruct, color_vec, name, line=args.line, ext_color_file=True, 
                         cmap_name=args.colormap, large_mode=args.large_mode,
-                        movie_mode=args.movie_mode, svg_mode=True)
+                        movie_mode=args.movie_mode, svg_mode=True, flipped=args.flipped)
                 elif color_string:
                     d.draw_rna(seq, secstruct, color_string, name, line=args.line, cmap_name = args.colormap,
-                     large_mode = args.large_mode, movie_mode=args.movie_mode, svg_mode=True)
+                     large_mode = args.large_mode, movie_mode=args.movie_mode, svg_mode=True, flipped=args.flipped)
                 else:
                     d.draw_rna(seq, secstruct, seq2col(seq), name, line=args.line, cmap_name = args.colormap,
-                     large_mode = args.large_mode, movie_mode=args.movie_mode, svg_mode=True)
+                     large_mode = args.large_mode, movie_mode=args.movie_mode, svg_mode=True, flipped=args.flipped)
                 
                 if args.png:
                     if 'INKSCAPEDIR' not in os.environ:

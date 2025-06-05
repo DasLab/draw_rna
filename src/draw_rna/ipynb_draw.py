@@ -3,7 +3,7 @@ import draw_rna.draw as d
 from draw_rna.draw_utils import seq2col
 
 def draw_struct(seq, secstruct, c=None, line=False, large_mode=False,
- cmap='viridis', rotation=0, vmin=None, vmax=None, alpha=None, ax=None):
+ cmap='viridis', rotation=0, vmin=None, vmax=None, alpha=None, ax=None, flipped=False):
     '''
     Draw sequence with secondary structure.
     Inputs:
@@ -18,14 +18,14 @@ def draw_struct(seq, secstruct, c=None, line=False, large_mode=False,
         assert len(c) == len(seq)
         if isinstance(c[0], float):
             d.draw_rna(seq, secstruct, c, line=line, ext_color_file=True, cmap_name = cmap, vmin=vmin, vmax=vmax,
-             rotation=rotation, large_mode = large_mode, alpha=alpha, ax=ax)
+             rotation=rotation, large_mode = large_mode, alpha=alpha, ax=ax, flipped=flipped)
         else:
             d.draw_rna(seq, secstruct, c,  line=line, cmap_name=cmap, large_mode=large_mode, vmin=vmin, vmax=vmax,
-             rotation=rotation, alpha=alpha, ax=ax)
+             rotation=rotation, alpha=alpha, ax=ax, flipped=flipped)
 
     else:
         d.draw_rna(seq, secstruct, seq2col(seq), line=line, cmap_name = cmap, vmin=vmin, vmax=vmax,
-         large_mode = large_mode, rotation=rotation, alpha=alpha, ax=ax)
+         large_mode = large_mode, rotation=rotation, alpha=alpha, ax=ax, flipped=flipped)
 
     if ax is None:
         plt.show()

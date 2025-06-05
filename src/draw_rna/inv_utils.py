@@ -38,7 +38,7 @@ def vienna_fold(seq, cotransc=False, constraint=False):
     p.wait()
 
     # split result by whitespace
-    toks = re.split('\s+| \(?\s?',pair)
+    toks = re.split(r'\s+| \(?\s?',pair)
     ret= []
     ret.append(toks[1])
     ret.append(toks[2][1:-1])

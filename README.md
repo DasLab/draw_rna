@@ -69,10 +69,6 @@ rrrrbbwbbgggg
 ```
 And then remove nucleotides corresponding to blanks afterwards. (This would be a quick fix.)
 
-## NOTE ON render_rna and render_rna_flip:
-
-'render_rna_flip.py' is what is currently called in the main routine and where major edits have been made. `render_rna.py` renders 3' -> 5'. TODO: handle 3' -> 5' drawing better.
-
 ## Extended options
 
 ### Draw a large thing with linear exterior loop and with a custom color vector:

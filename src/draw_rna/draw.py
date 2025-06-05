@@ -39,7 +39,7 @@ COLORS = {#"r": [255, 0, 0],
 def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
     cmap_name='viridis', rotation=0, alpha=None,
     ext_color_file=False, chemical_mapping_mode=False, 
-    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None):
+    large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None, flipped=False):
 
     if large_mode or movie_mode:
         CELL_PADDING = 100
@@ -59,7 +59,7 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
         if pairmap[i] > i:
             pairs.append({"from":i, "to":pairmap[i], "p":1.0, "color":COLORS["e"]})
 
-    r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, external_offset)
+    r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, external_offset, flipped)
 
     size = r.get_size()
 
@@ -123,10 +123,10 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
 
     if movie_mode or large_mode:
         r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING,
-         colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, alpha)
+         colors, pairs, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha)
     else:
         r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors,
-         pairs, sequence, RENDER_IN_LETTERS, external_offset, line, svg_mode, alpha )
+         pairs, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha)
 
     if not svg_mode:
         # apply matplotlib settings
