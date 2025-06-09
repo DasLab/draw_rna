@@ -40,7 +40,7 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
     cmap_name='viridis', rotation=0, alpha=None,
     ext_color_file=False, chemical_mapping_mode=False, 
     large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None,
-    flipped=False, padding=None, square=True, draw_pairs=True, direction_labels=True
+    flipped=False, padding=None, square=True, draw_pairs=True, draw_pseudoknots=True, direction_labels=True
 ):
 
     CELL_PADDING = padding
@@ -59,11 +59,19 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
         external_offset = 0 + np.pi*rotation/180
     
     r = render_rna.RNARenderer()
+
     pairmap = render_rna.get_pairmap_from_secstruct(secstruct)
     pairs = []
     for i in range(len(pairmap)):
         if pairmap[i] > i:
             pairs.append({"from":i, "to":pairmap[i], "p":1.0, "color":COLORS["e"]})
+    
+    pk_pairmap = render_rna.get_pk_pairmap_from_secstruct(secstruct)
+    pk_pairs = []
+    for i in range(len(pk_pairmap)):
+        if pk_pairmap[i] > i:
+            pk_pairs.append({"from":i, "to":pk_pairmap[i], "p":1.0, "color":COLORS["e"]})
+    
 
     r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, external_offset, flipped)
 
@@ -129,10 +137,10 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
 
     if movie_mode or large_mode:
         r.draw(drawing_obj, CELL_PADDING, cell_size_y-CELL_PADDING,
-         colors, pairs if draw_pairs else None, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha, direction_labels)
+         colors, pairs if draw_pairs else None, pk_pairs if draw_pseudoknots else None, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha, direction_labels)
     else:
         r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors,
-         pairs if draw_pairs else None, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha, direction_labels)
+         pairs if draw_pairs else None, pk_pairs if draw_pseudoknots else None, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha, direction_labels)
 
     if not svg_mode:
         # apply matplotlib settings

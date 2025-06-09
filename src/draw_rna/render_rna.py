@@ -54,6 +54,34 @@ def get_pairmap_from_secstruct(secstruct):
 
     return pairs_array
 
+def get_pk_pairmap_from_secstruct(s, allow_pseudoknots=False):
+    lefts = ["[", "{", "<"]
+    rights = ["]", "}", ">"]
+    lower_alphabet = [chr(lower) for lower in range(97, 123)]
+    upper_alphabet = [chr(upper) for upper in range(65, 91)]
+    lefts.extend(lower_alphabet)
+    rights.extend(upper_alphabet)
+
+    m = [-1 for i in range(len(s))]
+    for left, right in zip(lefts, rights):
+        bp1 = []
+        bp2 = []
+        for i, char in enumerate(s):
+            if char == left:
+                bp1.append(i)
+            elif char == right:
+                bp2.append(i)
+
+        for i in list(reversed(bp1)):
+            for j in bp2:
+                if j > i:
+                    m[i] = j
+                    m[j] = i
+
+                    bp2.remove(j)
+                    break
+
+    return m
 
 def add_nodes_recursive(bi_pairs, rootnode, start_index, end_index):
 
@@ -274,7 +302,7 @@ class RNARenderer:
     def get_size(self):
         return self.size_
 
-    def draw(self, svgobj, offset_x, offset_y, colors, pairs, sequence, render_in_letter, external_offset, flipped, line=False, svg_mode=True, alpha=None, direction_labels=True):
+    def draw(self, svgobj, offset_x, offset_y, colors, pairs, pk_pairs, sequence, render_in_letter, external_offset, flipped, line=False, svg_mode=True, alpha=None, direction_labels=True):
         if alpha is None:
             alpha = np.ones(len(self.xarray_))
 
@@ -294,6 +322,12 @@ class RNARenderer:
                         svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']],
                          offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']],
                           pair['color'], self.NODE_R, alpha=min([alpha[pair['from']],alpha[pair['to']]]))
+                
+                if pk_pairs:
+                    for pair in pk_pairs:
+                        svgobj.line(offset_x + self.xarray_[pair['from']], offset_y + self.yarray_[pair['from']],
+                         offset_x + self.xarray_[pair['to']], offset_y + self.yarray_[pair['to']],
+                          pair['color'], self.NODE_R / 4, alpha=min([alpha[pair['from']],alpha[pair['to']]]))
 
                 for ii in range(0,len(self.xarray_)):
                     if colors == None:
