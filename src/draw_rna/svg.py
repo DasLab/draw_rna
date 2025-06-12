@@ -53,20 +53,30 @@ class svg(object):
 
 	def text(self, x, y, size, fill, align, string,alpha=1):
 		fill = convert_color(fill)
-		self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" alpha="%s">%s</text>' % (x,y,size,fill,align,alpha,string))
+		aligned_y = y + (size)/2.0 - 2
+		self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" alpha="%s">%s</text>' % (x,aligned_y,size,fill,'middle',alpha,string))
         ## rotated
 		#self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 
-	def colorbar(self, cmap_name, **kwargs):
-		fig, ax = plt.subplots(figsize=(4, 1), layout='constrained')
+	def colorbar(self, cmap_name, label=None, **kwargs):
+		w = self.w / 2
+		h = w / 4
+
+		fig, ax = plt.subplots(figsize=(w / 36, h / 36))
+		fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
 		fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=cmap_name), cax=ax, **kwargs)
 		
 		out = BytesIO()
-		fig.savefig(out, transparent=True)
+		fig.savefig(out, bbox_inches='tight', pad_inches=0, transparent=True, dpi=300)
+		fig.savefig('colorbar.png', bbox_inches='tight', pad_inches=0, transparent=True, dpi=300)
 		out.seek(0)
 
-		w = self.w / 4
-		h = w / 4
-		x = self.w / 2 - w / 2
-		y = self.h - h 
-		self.__out.write('<image href="data:image/png;base64,%s" x="%d" y="%d" width="%d" height="%d" />' % (b64encode(out.read()).decode(), x, y, w, h))
+		bbox = fig.get_tightbbox()
+		final_width = bbox.width * 36
+		final_height = bbox.height * 36
+
+		x = (self.w  - final_width) / 2
+		y = self.h
+		self.__out.write('<image href="data:image/png;base64,%s" x="%s" y="%s" width="%s" height="%s" />' % (b64encode(out.read()).decode(), x, y, final_width, final_height))
+		if label:
+			self.text(self.w/2, y + final_height*1.25, h, "#000000", 'center', label)

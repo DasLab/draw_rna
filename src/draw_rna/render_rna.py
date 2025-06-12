@@ -352,12 +352,7 @@ class RNARenderer:
                         else:
                             color = "#000000"
 
-                        if svg_mode:
-                            text_offset_x = -4.0
-                            text_offset_y = (text_size)/2.0 - 1.0
-                            svgobj.text(self.xarray_[ii] + offset_x + text_offset_x, self.yarray_[ii] + offset_y + text_offset_y, text_size, color, "center", sequence[ii])
-                        else:
-                            svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii], alpha[ii])
+                        svgobj.text(self.xarray_[ii] + offset_x, self.yarray_[ii] + offset_y, text_size, color, "center", sequence[ii], alpha[ii])
 
     def get_coords(self, xarray, yarray, PRIMARY_SPACE, PAIR_SPACE, flipped):
 
