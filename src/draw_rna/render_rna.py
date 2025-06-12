@@ -340,10 +340,10 @@ class RNARenderer:
                     # write 5' 3' markers
                     if direction_labels:
                         svgobj.text(self.xarray_[0] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
-                        self.yarray_[0] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'", 1)
+                        self.yarray_[0] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "5'", 1, 'top')
 
                         svgobj.text(self.xarray_[-1] + offset_x + (1 if flipped else -1) * math.sin(external_offset)*2.5*self.NODE_R,
-                        self.yarray_[-1] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'", 1)
+                        self.yarray_[-1] + offset_y + (1 if flipped else -1) * math.cos(external_offset)* 2.5*self.NODE_R, self.NODE_R * 1.5, "#000000", "center", "3'", 1, 'top')
 
                     for ii in range(0,len(self.xarray_)):
                         text_size = self.NODE_R * 1.5

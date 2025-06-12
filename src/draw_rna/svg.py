@@ -29,7 +29,7 @@ class svg(object):
 		  width="%spx" height="%spx"
 		  viewBox="%s %s %s %s"
 		  enable-background="new 0 0 247.44 234.492"
-		  xml:space="preserve">""".replace('\t', '')[1:] % (self.w, self.maxy - self.miny, 0, self.miny, self.w, self.maxy))
+		  xml:space="preserve">""".replace('\t', '')[1:] % (self.w, self.maxy - self.miny, 0, self.miny, self.w, self.maxy - self.miny))
 		self.__out.write('\n')
 
 		for element in self.elements:
@@ -60,21 +60,24 @@ class svg(object):
 		self.elements.append('<circle cx="%s" cy="%s" r="%s" fill="%s" stroke="%s" alpha="%s"/>\n' %
 			(x, y, radius, fill, stroke,alpha))
 
-	def text(self, x, y, size, fill, align, string,alpha=1):
+	def text(self, x, y, size, fill, align, string,alpha=1,align_y='center'):
 		if y < self.miny:
 			self.miny = y - self.padding
 
 		fill = convert_color(fill)
-		aligned_y = y + (size)/2.0 - 2
-		self.elements.append(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" alpha="%s">%s</text>' % (x,aligned_y,size,fill,'middle',alpha,string))
+		if align_y == 'center':
+			dominant_baseline = 'middle'
+		elif align_y == 'top':
+			dominant_baseline = 'hanging'
+		self.elements.append(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" dominant-baseline="%s" alpha="%s">%s</text>' % (x,y,size,fill,'middle',dominant_baseline,alpha,string))
         ## rotated
 		#self.elements.append(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 
-	def colorbar(self, cmap_name, label=None, **kwargs):
-		w = self.w / 2
-		h = w / 4
+	def colorbar(self, cmap_name, fraction, aspect, label=None, **kwargs):
+		h = self.h * fraction
+		w = h * aspect
 
-		fig, ax = plt.subplots(figsize=(w / 36, h / 36))
+		fig, ax = plt.subplots(figsize=(w / 72, h / 72))
 		fig.subplots_adjust(left=0, right=1, top=1, bottom=0)
 		fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=cmap_name), cax=ax, **kwargs)
 		
@@ -83,15 +86,15 @@ class svg(object):
 		out.seek(0)
 
 		bbox = fig.get_tightbbox()
-		final_width = bbox.width * 36
-		final_height = bbox.height * 36
+		final_width = bbox.width * 72
+		final_height = bbox.height * 72
 
 		x = (self.w  - final_width) / 2
 		y = self.h
 		self.elements.append('<image href="data:image/png;base64,%s" x="%s" y="%s" width="%s" height="%s" />' % (b64encode(out.read()).decode(), x, y, final_width, final_height))
 
 		if label:
-			self.text(self.w/2, y + final_height*1.25, h, "#000000", 'center', label)
-			self.maxy = y + final_height*1.25 + h + self.padding
+			self.text(self.w/2, y + final_height + final_height/16, final_height // 2, "#000000", 'center', label, align_y='top')
+			self.maxy = y + final_height + final_height/16 + final_height//2 + self.padding
 		else:
-			self.maxy = y + final_height*1.25 + self.padding
+			self.maxy = y + final_height + self.padding

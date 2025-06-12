@@ -24,9 +24,9 @@ class mpl(object):
 		circ = plt.Circle((x,y),radius=radius, alpha=alpha, color=fill, zorder=1, linewidth=0)
 		self.ax.add_artist(circ)
 	
-	def text(self, x, y, size, fill, align, string, alpha=1):
+	def text(self, x, y, size, fill, align, string, alpha=1, align_y='center'):
 		fill = convert_color(fill)
-		plt.text(x,y,string, fontsize=size, color=fill, zorder=2, horizontalalignment='center', verticalalignment='center', alpha=alpha)
+		plt.text(x,y,string, fontsize=size, color=fill, zorder=2, horizontalalignment=align, verticalalignment=align_y, alpha=alpha)
         ## rotated 
 		#self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 	
