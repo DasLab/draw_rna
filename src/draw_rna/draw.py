@@ -5,6 +5,7 @@ import draw_rna.inv_utils as inv_utils
 import numpy as np
 import argparse
 import re
+from io import BytesIO
 from matplotlib import cm
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
@@ -40,7 +41,8 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
     cmap_name='viridis', rotation=0, alpha=None,
     ext_color_file=False, chemical_mapping_mode=False, 
     large_mode=False, movie_mode=False, svg_mode=False, vmin=None, vmax=None, ax=None,
-    flipped=False, padding=None, square=True, draw_pairs=True, draw_pseudoknots=True, direction_labels=True
+    flipped=False, padding=None, square=True, draw_pairs=True, draw_pseudoknots=True,
+    direction_labels=True, show_colorbar='auto', colorbar_label=None
 ):
 
     CELL_PADDING = padding
@@ -75,26 +77,14 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
 
     r.setup_tree(secstruct, NODE_R, PRIMARY_SPACE, PAIR_SPACE, external_multiplier, external_offset, flipped)
 
-    size = r.get_size()
-
-    if large_mode or movie_mode:
-        r.xarray_ = [x - r.xarray_[0] for x in r.xarray_]
-        r.yarray_ = [y - r.yarray_[0] for y in r.yarray_]
-        #print(np.min(r.xarray_), np.max(r.xarray_))
-        #print(np.min(r.yarray_), np.max(r.yarray_))
-
-        cell_size_x = np.max(r.xarray_) - np.min(r.xarray_) + CELL_PADDING * 2
-        cell_size_y = np.max(r.yarray_) - np.min(r.yarray_) + CELL_PADDING * 2
-        #print(cell_size_x, cell_size_y)
-
-    else:
-        cell_size_x = (max(size) if square else size[0]) + CELL_PADDING * 2
-        cell_size_y = (max(size) if square else size[1]) + CELL_PADDING * 2
-
     # if colors are numeric, create color scale
 
+    do_show_colorbar = True if show_colorbar is True else False
 
     if ext_color_file:
+        if show_colorbar == 'auto':
+            do_show_colorbar = True
+
         if vmin is None:
             vmin=np.min(color_list)
         if vmax is None:
@@ -112,6 +102,8 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
 
         else: #if isinstance(color_list[0],float):
             print('Interpreting color string as integer values')
+            if show_colorbar == 'auto':
+                do_show_colorbar = True
             colors = [float(x) for x in color_list]
             colormap = plt.get_cmap(cmap_name) 
             if vmin is None:
@@ -124,12 +116,34 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
             colors = [scalarMap.to_rgba(val)[:-1] for val in colors]
             colors = [[x*256 for x in y] for y in colors]
 
+    size = r.get_size()
+    if do_show_colorbar:
+        size[1] += size[0] / 4 / 4 * 1.25
+
+    if large_mode or movie_mode:
+        r.xarray_ = [x - r.xarray_[0] for x in r.xarray_]
+        r.yarray_ = [y - r.yarray_[0] for y in r.yarray_]
+        #print(np.min(r.xarray_), np.max(r.xarray_))
+        #print(np.min(r.yarray_), np.max(r.yarray_))
+
+        cell_size_x = np.max(r.xarray_) - np.min(r.xarray_) + CELL_PADDING * 2
+        cell_size_y = np.max(r.yarray_) - np.min(r.yarray_) + CELL_PADDING * 2
+
+        if do_show_colorbar:
+            cell_size_y += cell_size_x / 4 / 4 * 1.25
+
+        #print(cell_size_x, cell_size_y)
+
+    else:
+        cell_size_x = (max(size) if square else size[0]) + CELL_PADDING * 2
+        cell_size_y = (max(size) if square else size[1]) + CELL_PADDING * 2
+
     if svg_mode:
         # drawing object writes an svg file
         drawing_obj = svg.svg("%s.svg" % filename, cell_size_x, cell_size_y)
     else:
         if ax is None:
-            fig, ax = plt.subplots(1,1,figsize=(cell_size_x/72, cell_size_y/72))
+            fig, ax = plt.subplots(1,1,figsize=(cell_size_x/72, cell_size_y/72), layout='constrained')
             drawing_obj = mpl.mpl(ax=ax)
 
         else:
@@ -141,6 +155,9 @@ def draw_rna(sequence, secstruct, color_list, filename="secstruct", line=False,
     else:
         r.draw(drawing_obj, CELL_PADDING, CELL_PADDING, colors,
          pairs if draw_pairs else None, pk_pairs if draw_pseudoknots else None, sequence, RENDER_IN_LETTERS, external_offset, flipped, line, svg_mode, alpha, direction_labels)
+
+    if do_show_colorbar:
+        drawing_obj.colorbar(cmap_name=cmap_name, label=colorbar_label, aspect=4, fraction=0.05, orientation="horizontal")
 
     if not svg_mode:
         # apply matplotlib settings

@@ -1,4 +1,6 @@
 import matplotlib.pyplot as plt
+from matplotlib.colors import Normalize
+from matplotlib.cm import ScalarMappable
 from draw_rna.draw_utils import * 
 
 class mpl(object):
@@ -28,6 +30,9 @@ class mpl(object):
         ## rotated 
 		#self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 	
+	def colorbar(self, cmap_name, **kwargs):
+		plt.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=cmap_name), ax=self.ax, **kwargs)
+
 	def clean_up(self):
 		self.ax.set_aspect('equal')
 		plt.axis('off')

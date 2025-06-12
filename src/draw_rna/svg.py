@@ -1,9 +1,17 @@
 """Methods for outputting SVG files."""
-
+from io import BytesIO
+from base64 import b64encode
+import numpy as np
+from matplotlib import pyplot as plt
+from matplotlib.colors import Normalize
+from matplotlib.cm import ScalarMappable
 from draw_rna.draw_utils import *
 
 class svg(object):
 	def __init__(self, filename, w, h):
+		self.w = w
+		self.h = h
+
 		# create the file
 		self.__out = open(filename, 'w')
 
@@ -49,3 +57,16 @@ class svg(object):
         ## rotated
 		#self.__out.write(' <text x="%d" y="%d" font-family="sans_serif" font-size="%d" fill="%s" text-anchor="%s" transform="rotate(180 %d,%d)">%s</text>' % (x-10,y+10,size,fill,align,x,y,str))
 
+	def colorbar(self, cmap_name, **kwargs):
+		fig, ax = plt.subplots(figsize=(4, 1), layout='constrained')
+		fig.colorbar(ScalarMappable(norm=Normalize(0, 1), cmap=cmap_name), cax=ax, **kwargs)
+		
+		out = BytesIO()
+		fig.savefig(out, transparent=True)
+		out.seek(0)
+
+		w = self.w / 4
+		h = w / 4
+		x = self.w / 2 - w / 2
+		y = self.h - h 
+		self.__out.write('<image href="data:image/png;base64,%s" x="%d" y="%d" width="%d" height="%d" />' % (b64encode(out.read()).decode(), x, y, w, h))
