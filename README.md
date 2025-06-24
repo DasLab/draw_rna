@@ -2,8 +2,6 @@
 
 Generate quick secondary structures of nucleic acids via jupyter notebook or command line.
 
-A communal and continuing effort by the Das Lab, Eterna Players, M. Wu, H. Wayment-Steele.
-
 ## Dependencies
 
 The default behavior is to output the secondary structure visualization to both svg and png. The png requires Inkscape, whose directory must be set by environmental variable `INKSCAPEDIR`.
@@ -15,7 +13,7 @@ The default behavior is to output the secondary structure visualization to both 
 
 Alternatively, clone the Github repository to your hard drive as follows:
 
-`git clone git@github.com:DasLab/draw_rna.git`
+`git clone git@github.com:eternagame/draw_rna.git`
 
 *Warning* if you see errors in using the repository, it may be due to your `draw_rna` directory sitting in a folder like `src/` which already is in your Python Path. in that case, *rename* `draw_rna` to `draw_rna_directory` and/or move it to another spot in your system.
 

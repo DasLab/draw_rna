@@ -1,8 +1,8 @@
 [project]
 name = "draw_rna"
-version = "0.4.2"
+version = "0.4.3"
 authors = [
-  { name="Das Lab", email="thedaslab@stanford.edu" },
+  { name="Eternagame", email="support@eternagame.org" },
 ]
 description = "Draw RNA secondary structures in Python"
 readme = "README.md"
@@ -20,8 +20,8 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/DasLab/draw_rna"
-"Bug Tracker" = "https://github.com/DasLab/draw_rna/issues"
+"Homepage" = "https://github.com/eternagame/draw_rna"
+"Bug Tracker" = "https://github.com/eternagame/draw_rna/issues"
 
 [build-system]
 requires = ["setuptools>=61.0"]
